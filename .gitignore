@@ -1,6 +1,7 @@
 # user define
 config/*.txt
 config/*input.json
+*.xlsx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

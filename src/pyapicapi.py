@@ -46,8 +46,6 @@ def get_apic_token(ip: str, username: str, password: str) -> str:
         "Accept":"application/json",
         "Content-Type": "application/json"
     }
-
-    logger.info(f'###### Step4 - Login apic and get token:')
     requests.packages.urllib3.disable_warnings()
     resp = requests.post(url, headers=headers, data=json.dumps(payload), verify=False)
     token = resp.json()['imdata'][0]['aaaLogin']['attributes']['token']
@@ -64,7 +62,7 @@ def get_apic_api_resp(ip: str, key: str, token: str) -> requests.Response:
         "Cookie" : f'APIC-Cookie={token}'
     }
 
-    logger.info(f' Step5A - Login apic api: {key} - {url}')
+    logger.info(f' Login apic api: {key} - {url}')
     resp = requests.get(url, headers=headers, data=payload, verify=False)
     return resp
 
@@ -78,13 +76,13 @@ def parse_apic_json_to_df(key: str, json_obj: list) -> pd.DataFrame:
     for data in json_obj['imdata']:
         parsed_data.append(data[key]['attributes'])
     df = pd.DataFrame(parsed_data)
-    logger.info(f' Step5B - Exported to dataframe, size: {df.shape}')
+    logger.info(f' Exported to dataframe, size: {df.shape}')
     return df
 
 def remove_columns(df: pd.DataFrame, properties: list) -> pd.DataFrame:
     for i in properties:
         df.pop(i)
-    logger.info(f' Step5C - Removed properties size: {df.shape}')
+    logger.info(f' Removed properties size: {df.shape}')
     return df
 
 def export_df_to_xlsx(writer: pd.ExcelWriter, df: pd.DataFrame, key: str) -> None:
@@ -93,7 +91,6 @@ def export_df_to_xlsx(writer: pd.ExcelWriter, df: pd.DataFrame, key: str) -> Non
     return
 
 def get_config_files_to_list(dir: str) -> list:
-    logger.info(f'###### Step1 - Get config files in: {dir}')
     matched_files = []
     files = os.listdir(dir)
     for f in files:
@@ -103,7 +100,6 @@ def get_config_files_to_list(dir: str) -> list:
     return matched_files
 
 def promt_user_select_file(files: list) -> str:
-    logger.info(f'###### Step2 - Choose input config files from list:')
     if len(files) == 1:
         logger.info(f' 0) {files[0]}')
         selected_file = files[0]
@@ -118,7 +114,30 @@ def promt_user_select_file(files: list) -> str:
     return selected_file 
 
 def read_config_json(in_file: str) -> list:
-    logger.info(f'###### Step3 - Load json config from {in_file}')
+    '''
+        config json file format:
+        {
+            "login": {
+                "username": "admin",
+                "password": "passw0rd",
+                "environment": "np1",
+                "ip": "10.1.1.1:443",
+                "remove_properties_flag": 1
+            },
+            "tables": [
+                {
+                "name": "Loading APIC Topology",
+                "key": "topSystem",
+                "alias": "Topology",
+                "remove_properties": [
+                    "oobMgmtGateway",
+                    "configIssues",
+                    }
+                }
+            ]
+        }
+    '''
+    
     with open(in_file,'r') as f:
         config = json.load(f)
     logger.info(f" Info collected, tables to process: {len(config['tables'])}")
@@ -128,17 +147,22 @@ def process_script() -> None:
     config_dir = os.path.join(PARENT_DIR, CONFIG_DIR)
 
     # step 1: get config files
+    logger.info(f'###### Step1 - Get config files in: {config_dir}')
     files = get_config_files_to_list(config_dir)
 
     # step 2: user select config file
+    logger.info(f'###### Step2 - Choose input config files from list:')
     file = promt_user_select_file(files)
 
     # step 3: read config file
+    logger.info(f'###### Step3 - Load json config from {file}')
     [login_info, req_tables] = read_config_json(os.path.join(config_dir, file))
 
     # step 4: login apic
+    logger.info(f'###### Step4 - Login apic and get token:')
     token = get_apic_token(login_info['ip'], login_info['username'], login_info['password'])
 
+    # step 5: process apic api and export to excel
     # Prepare excel writer
     outfile = f"apic_{login_info['environment']}_{get_datetime()}.xlsx"
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
@@ -148,11 +172,14 @@ def process_script() -> None:
         logger.info(f" ### [{i + 1}/{len(req_tables)}], process {req_tables[i]['key']}")
         # step 5A: Get apic api
         resp = get_apic_api_resp(login_info['ip'], req_tables[i]['key'], token)
+
         # step 5B: Export to df
         df1 = parse_apic_json_to_df(req_tables[i]['key'], resp.json())
+
         # step 5C: remove properties column
         if login_info['remove_properties_flag'] == 1:
             df1 = remove_columns(df1, req_tables[i]['remove_properties'])
+
         # step 5D: export to excel
         export_df_to_xlsx(writer, df1, req_tables[i]['key'])
     writer.close()
