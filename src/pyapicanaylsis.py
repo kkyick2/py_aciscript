@@ -92,19 +92,17 @@ def process_script() -> None:
     file = promt_user_select_file(files)
 
     # step 3: column operation
-    # fvAEPg
-
-    # fvBD
-    
+    # ===========================================================================
     # fvRsBd ==================== (BD EPG mapping)
     df_fvRsBd = pd.read_excel(file, sheet_name='fvRsBd')
     # 'in': dn,tnFvBDName
-    # 'out': ap,epg,bd
+    # 'out': dn>(tn,ap,epg),bd
     #
     # dn:[0]   [1]    [2]        [3]            [4] 
     # uni/tn-tn-eMPF/ap-ap-MDG/epg-epg-MDG-dAPP/rsbd
     df_fvRsBd_split = df_fvRsBd['dn'].str.split('/', expand=True)
-    df_fvRsBd_out = df_fvRsBd_split[[2, 3]].rename(columns={2: 'ap', 3: 'epg'})
+    df_fvRsBd_out = df_fvRsBd_split[[1, 2, 3]].rename(columns={1: 'tn', 2: 'ap', 3: 'epg'})
+    df_fvRsBd_out['tn'] = df_fvRsBd_out['tn'].str.replace(r'tn-tn-(.*)', r'tn-\1', regex=True)
     df_fvRsBd_out['ap'] = df_fvRsBd_out['ap'].str.replace(r'ap-ap-(.*)', r'ap-\1', regex=True)
     df_fvRsBd_out['epg'] = df_fvRsBd_out['epg'].str.replace(r'epg-epg-(.*)', r'epg-\1', regex=True)
     df_fvRsBd_out['bd'] = df_fvRsBd['tnFvBDName']
@@ -122,19 +120,26 @@ def process_script() -> None:
     df_fvSubnet['dn'] = df_fvSubnet['dn'].str.replace(r'epg-epg-(.*)', r'epg-\1', regex=True)
     df_fvSubnet['dn'] = df_fvSubnet['dn'].str.replace(r'BD-(.*)', r'\1', regex=True)
     df_fvSubnet_out = df_fvSubnet[['dn', 'ip']]
+    # merage bg,epg,subnet
+    temp_df1 = pd.merge(df_fvRsBd_out, df_fvSubnet_out, left_on=['epg'], right_on=['dn'], how="inner")
+    temp_df1 = temp_df1.drop(columns=['dn'])
+    temp_df2 = pd.merge(df_fvRsBd_out, df_fvSubnet_out, left_on=['bd'], right_on=['dn'], how="inner")
+    temp_df2 = temp_df2.drop(columns=['dn'])
+    df_merged = pd.concat([temp_df1, temp_df2], ignore_index=True, sort=False)
     # calc ip address to subnet address
-    df_fvSubnet_out = df_fvSubnet_out.rename(columns={'ip': 'gateway'})
-    df_fvSubnet_out['subnet'] = df_fvSubnet_out['gateway'].apply(calculate_subnet)
+    #df_merged = df_merged.rename(columns={'ip': 'gateway'})
+    #df_merged['subnet'] = df_merged['gateway'].apply(calculate_subnet)
+    # ===========================================================================
     
-    # merage
-    # temp_df1 = pd.merge(df_fvRsBd_out, df_fvSubnet_out, on="epg", how="outer")    
-
     # step 99: export result to xlsx
     outfile = f"apic_tables_{get_datetime()}.xlsx"
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
     export_df_to_xlsx(writer, df_fvRsBd_out, 'fvRsBd')
     export_df_to_xlsx(writer, df_fvSubnet_out, 'fvSubnet')
-    # export_df_to_xlsx(writer, temp_df1, 'temp_df1')
+    export_df_to_xlsx(writer, temp_df1, 'fvSubnet_epg')
+    export_df_to_xlsx(writer, temp_df2, 'fvSubnet_bd')
+    export_df_to_xlsx(writer, df_merged, 'fvSubnet_all')
+
     writer.close()
     return
 
