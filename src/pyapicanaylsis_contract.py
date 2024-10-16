@@ -62,23 +62,15 @@ def export_df_to_xlsx(writer: pd.ExcelWriter, df: pd.DataFrame, key: str) -> Non
     ws = writer.sheets[key]
     return
 
-def replace_value(df, column, regex_list):       #replace pattern
-    df[column] = df[column].replace(regex=regex_list, value="")
-    return df
-
-def remove_columns(df: pd.DataFrame, properties: list) -> pd.DataFrame:
-    for i in properties:
-        df.pop(i)
-    logger.info(f' New size: {df.shape}')
-    return df
-
-def select_columns(df: pd.DataFrame, properties: list) -> pd.DataFrame:
-    df = df[properties]
-    logger.info(f' New size: {df.shape}')
-    return df
-
 def calculate_subnet(ip):
-    return str(ipaddress.ip_network(ip, strict=False))
+    if pd.isna(ip):
+        return ''  # Return empty string for null values
+    try:
+        # Create an IPv4 network object
+        network = ipaddress.ip_network(ip, strict=False)
+        return str(network)  # Return the network address as a string
+    except ValueError:
+        return ''  # Return empty string for invalid gateway formats
 
 def process_script() -> None:
     config_dir = os.path.join(PARENT_DIR)
@@ -94,13 +86,34 @@ def process_script() -> None:
     # step 3: column operation
     # ===========================================================================
 
-    # Get all subnet for temp use
+    # step 3A: Get subnet
+    # fvSubnet ========================================
+    df_fvSubnet = pd.read_excel(file, sheet_name='fvSubnet')
+    df_fvSubnet = df_fvSubnet[['dn','ip']]                         # choose column
+    # dn > epg, ip > gateway
+    df_fvSubnet['dn'] = df_fvSubnet['dn'].str.replace(r'/subnet-(.*)$', '', regex=True)
 
-    # Get all EPG for temp use    
+    # step 3B: Get EPG and BD
+    # fvRsBd ========================================
+    df_fvRsBd = pd.read_excel(file, sheet_name='fvRsBd')
+    df_fvRsBd = df_fvRsBd[['dn','tDn']]                             # choose column
+    # dn > epg, tdn > bd
+    df_fvRsBd['dn'] = df_fvRsBd['dn'].str.replace(r'/rsbd$', '', regex=True)
+    # rename column
+    df_fvRsBd = df_fvRsBd.rename(columns={'dn':'epg', 'tDn': 'bd'})
+    # merge
+    df_fvRsBd1 = pd.merge(df_fvRsBd, df_fvSubnet, left_on='epg', right_on='dn', how='inner') # merge epg with ip
+    df_fvRsBd1 = df_fvRsBd1.drop(columns=['dn'])
+    df_fvRsBd2 = pd.merge(df_fvRsBd, df_fvSubnet, left_on='bd', right_on='dn', how='inner') # merge bd with ip
+    df_fvRsBd2 = df_fvRsBd2.drop(columns=['dn'])
+    df_fvRsBd3 = pd.concat([df_fvRsBd1, df_fvRsBd2], ignore_index=True, sort=False)  # merge epg and bd with ip
+    # Combine output # epg, bd, gateway, subnet
+    df_epgbd_ip = pd.merge(df_fvRsBd, df_fvRsBd3, on=['epg', 'bd'], how='left')
+    df_epgbd_ip = df_epgbd_ip.sort_values(by=['epg'], ascending=True)
+    df_epgbd_ip = df_epgbd_ip.rename(columns={'ip': 'gateway'})
+    df_epgbd_ip['subnet'] = df_epgbd_ip['gateway'].apply(calculate_subnet)
 
-    # Merge ip to corresponding EGP & BD
-
-    # Get contract consumer EPG 
+    # step 3C: Get contract consumer EPG
     # fvRsCons ========================================
     df_fvRsCons = pd.read_excel(file, sheet_name='fvRsCons')
     df_fvRsCons = df_fvRsCons[['dn','tDn']]                         # choose column
@@ -109,7 +122,7 @@ def process_script() -> None:
     # rename column
     df_fvRsCons = df_fvRsCons.rename(columns={'dn':'consumer_epg', 'tDn': 'contract'})     
     
-    # Get contract provider EPG 
+    # step 3D: Get contract provider EPG
     # fvRsProv ========================================
     df_fvRsProv = pd.read_excel(file, sheet_name='fvRsProv')
     df_fvRsProv = df_fvRsProv[['dn','tDn']]                         # choose column
@@ -118,29 +131,50 @@ def process_script() -> None:
     # rename column
     df_fvRsProv = df_fvRsProv.rename(columns={'dn':'provider_epg', 'tDn': 'contract'})     
 
-    # Get filters in contract
+    # step 3E: Get filters
     # vzRsSubjFiltAtt ========================================
     df_vzRsSubjFiltAtt = pd.read_excel(file, sheet_name='vzRsSubjFiltAtt')
-    df_vzRsSubjFiltAtt = df_vzRsSubjFiltAtt[['dn','tnVzFilterName']] # choose column
+    df_vzRsSubjFiltAtt = df_vzRsSubjFiltAtt[['dn','tnVzFilterName','action']]  # choose column
     # dn > contract, tnVzFilterName > filter
     df_vzRsSubjFiltAtt['dn'] = df_vzRsSubjFiltAtt['dn'].str.replace(r'/subj-(.*)/rssubjFiltAtt-(.*)$', '', regex=True)
+    # For output
+    df_vzRsSubjFiltAtt_out = df_vzRsSubjFiltAtt.copy()
+    df_vzRsSubjFiltAtt_out = df_vzRsSubjFiltAtt_out.rename(columns={'dn':'contract', 'tnVzFilterName': 'filter'})
+    df_vzRsSubjFiltAtt_out = df_vzRsSubjFiltAtt_out.sort_values(by=['contract'])
+    # For merge
+    df_vzRsSubjFiltAtt = df_vzRsSubjFiltAtt[['dn','tnVzFilterName']]                                          # choose column
     df_vzRsSubjFiltAtt = df_vzRsSubjFiltAtt.sort_values(by=['tnVzFilterName'])                                # sorting
     df_vzRsSubjFiltAtt = df_vzRsSubjFiltAtt.groupby('dn')['tnVzFilterName'].agg(lambda col: ','.join(col))    # group the filter by contract name
     df_vzRsSubjFiltAtt = df_vzRsSubjFiltAtt.reset_index(name="tnVzFilterName")                                # add back index
-    # rename column
+     # rename column
     df_vzRsSubjFiltAtt = df_vzRsSubjFiltAtt.rename(columns={'dn':'contract', 'tnVzFilterName': 'filter'})
- 
-    # Combine consumer_epg, provider_epg, filter
-    df_contractcombine = pd.merge(df_fvRsCons, df_fvRsProv, on="contract", how="outer")
-    df_contractcombine = pd.merge(df_contractcombine, df_vzRsSubjFiltAtt, on="contract", how="outer")
+    # Combine ========================================
+    # consumer_epg, contract, provider_epg, filter
+    df_contract_all = pd.merge(df_fvRsCons, df_fvRsProv, on="contract", how="outer")
+    df_contract_all = pd.merge(df_contract_all, df_vzRsSubjFiltAtt, on="contract", how="outer")
+    # Combine  ========================================
+    # contract, consumer_epg, consumer_subnet, provider_epg, provider_subnet, filter 
+    df_epgbd_ip_tmp1 = df_epgbd_ip[['epg','subnet']]       # choose column
+    df_contract_epgip = pd.merge(df_contract_all, df_epgbd_ip_tmp1, left_on='consumer_epg', right_on='epg', how="left")
+    df_contract_epgip = df_contract_epgip.rename(columns={'subnet':'consumer_subnet'})
+    df_contract_epgip = pd.merge(df_contract_epgip, df_epgbd_ip_tmp1, left_on='provider_epg', right_on='epg', how="left")
+    df_contract_epgip = df_contract_epgip.rename(columns={'subnet':'provider_subnet'})
+    df_contract_epgip = df_contract_epgip[['contract','consumer_epg','consumer_subnet','provider_epg','provider_subnet','filter']]
 
-    # step 99: export result to xlsx
-    outfile = f"apic_tables_{get_datetime()}.xlsx"
+    # step 99: export result to xlsx apic_n1_tables_20241016_1335.xlsx
+    outfile_env = file.split("_")[1]
+    outfile = f"apic_{outfile_env}_contract_{get_datetime()}.xlsx"
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
-    export_df_to_xlsx(writer, df_fvRsCons, 'fvRsCons')
-    export_df_to_xlsx(writer, df_fvRsProv, 'fvRsProv')
-    export_df_to_xlsx(writer, df_vzRsSubjFiltAtt, 'vzRsSubjFiltAtt')
-    export_df_to_xlsx(writer, df_contractcombine, 'contract_combine')
+    tshoot = 0
+    if tshoot == 1:
+        export_df_to_xlsx(writer, df_fvRsBd, 'fvRsBd')
+        export_df_to_xlsx(writer, df_fvSubnet, 'fvSubnet')
+        export_df_to_xlsx(writer, df_fvRsCons, 'fvRsCons')
+        export_df_to_xlsx(writer, df_fvRsProv, 'fvRsProv')
+    export_df_to_xlsx(writer, df_epgbd_ip, 'epgbd_ip')
+    export_df_to_xlsx(writer, df_vzRsSubjFiltAtt_out, 'filter')
+    export_df_to_xlsx(writer, df_contract_all, 'contract')
+    export_df_to_xlsx(writer, df_contract_epgip, 'contract_epgip')
 
     writer.close()
     return

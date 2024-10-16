@@ -3,7 +3,7 @@
     "username": "admin",
     "password": "password",
     "environment": "np1",
-    "ip": "10.1.210.61:443",
+    "ip": "172.31.1.1:443",
     "remove_properties_flag": 1
   },
   "tables": [
@@ -49,6 +49,26 @@
       ]
     },
     {
+      "name": "Loading Application Profile",
+      "key": "fvAp",
+      "alias": "App_Profile",
+      "remove_properties": [
+        "childAction",
+        "modTs",
+        "extMngdBy",
+        "lcOwn",
+        "monPolDn",
+        "nameAlias",
+        "ownerKey",
+        "ownerTag",
+        "prio",
+        "status",
+        "uid",
+        "userdom",
+        "descr"
+      ]
+    },
+    {
       "name": "Loading Bridge Domain",
       "key": "fvBD",
       "alias": "Bridge_Domain",
@@ -84,26 +104,6 @@
       ]
     },
     {
-      "name": "Loading Application Profile",
-      "key": "fvAp",
-      "alias": "App_Profile",
-      "remove_properties": [
-        "childAction",
-        "modTs",
-        "extMngdBy",
-        "lcOwn",
-        "monPolDn",
-        "nameAlias",
-        "ownerKey",
-        "ownerTag",
-        "prio",
-        "status",
-        "uid",
-        "userdom",
-        "descr"
-      ]
-    },
-    {
       "name": "Loading EPG Detail",
       "key": "fvAEPg",
       "alias": "EPG",
@@ -131,6 +131,217 @@
         "isAttrBasedEPg",
         "isSharedSrvMsiteEPg"
       ]
+    },
+    {
+      "name": "Loading EGP BD Mapping",
+      "key": "fvRsBd",
+      "alias": "EPG_BD",
+      "remove_properties": [
+        "annotation",
+        "childAction",
+        "extMngdBy",
+        "forceResolve",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "rType",
+        "state",
+        "stateQual",
+        "status",
+        "tCl",
+        "tContextDn",
+        "tType",
+        "uid",
+        "userdom",
+        "tRn"
+      ]
+    },
+    {
+      "name": "Loading BD Subnet Detail",
+      "key": "fvSubnet",
+      "alias": "BD_Subnet",
+      "remove_properties": [
+        "childAction",
+        "configIssues",
+        "debugMessage",
+        "descr",
+        "extMngdBy",
+        "ipDPLearning",
+        "lcOwn",
+        "monPolDn",
+        "name",
+        "nameAlias",
+        "preferred",
+        "status",
+        "uid",
+        "userdom",
+        "virtual",
+        "ctrl",
+        "modTs"
+      ]
+    },
+    {
+      "name": "Loading Filter",
+      "key": "vzEntry",
+      "alias": "Filter",
+      "remove_properties": [
+        "accessPrivilege",
+        "applyToFrag",
+        "arpOpc",
+        "childAction",
+        "descr",
+        "nameAlias",
+        "sFromPort",
+        "sToPort",
+        "stateful",
+        "status",
+        "tcpRules",
+        "uid",
+        "userdom",
+        "extMngdBy",
+        "icmpv6T",
+        "icmpv4T",
+        "lcOwn",
+        "matchDscp",
+        "modTs",
+        "monPolDn"
+      ]
+    },
+    {
+      "name": "Loading ACI Contract Detail",
+      "key": "vzBrCP",
+      "alias": "ACI_Contract",
+      "remove_properties": [
+        "accessPrivilege",
+        "childAction",
+        "configIssues",
+        "descr",
+        "extMngdBy",
+        "intent",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "nameAlias",
+        "ownerKey",
+        "ownerTag",
+        "status",
+        "uid",
+        "userdom",
+        "scope",
+        "prio"
+      ]
+    },
+    {
+      "name": "Loading filter of contract",
+      "key": "vzRsSubjFiltAtt",
+      "alias": "filter_of_contract",
+      "remove_properties": [
+        "annotation",
+        "directives",
+        "forceResolve",
+        "lcOwn",
+        "priorityOverride",
+        "tCl",
+        "tDn",
+        "tRn",
+        "accessPrivilege",
+        "childAction",
+        "extMngdBy",
+        "modTs",
+        "monPolDn",
+        "rType",
+        "state",
+        "stateQual",
+        "status",
+        "tType",
+        "uid",
+        "userdom",
+        "tContextDn"
+      ]
+    },
+    {
+      "name": "Loading Consumer Contract",
+      "key": "fvRsCons",
+      "alias": "Consumer_Contract",
+      "remove_properties": [
+        "accessPrivilege",
+        "childAction",
+        "ctrctUpd",
+        "deplInfo",
+        "extMngdBy",
+        "intent",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "prio",
+        "rType",
+        "state",
+        "stateQual",
+        "status",
+        "tCl",
+        "tContextDn",
+        "forceResolve",
+        "tType",
+        "triggerSt",
+        "tRn",
+        "uid",
+        "updateCollection",
+        "userdom"
+      ]
+    },
+    {
+      "name": "Loading Provider Contract",
+      "key": "fvRsProv",
+      "alias": "Provider_Contract",
+      "remove_properties": [
+        "accessPrivilege",
+        "childAction",
+        "ctrctUpd",
+        "extMngdBy",
+        "intent",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "prio",
+        "rType",
+        "state",
+        "stateQual",
+        "status",
+        "tCl",
+        "tContextDn",
+        "matchT",
+        "forceResolve",
+        "tType",
+        "triggerSt",
+        "tRn",
+        "uid",
+        "updateCollection",
+        "userdom"
+      ]
+    },
+    {
+      "name": "Loading Consumer EPG of contract",
+      "key": "vzRtCons",
+      "alias": "Consumer_EPG_of_contract",
+      "remove_properties": ["childAction", "modTs", "lcOwn", "tCl", "status"]
+    },
+    {
+      "name": "Loading Provider EPG of contract",
+      "key": "vzRtProv",
+      "alias": "Provider_EPG_of_contract",
+      "remove_properties": ["childAction", "modTs", "lcOwn", "tCl", "status"]
+    },
+    {
+      "name": "Loading Consumer vzAny",
+      "key": "vzRtAnyToCons",
+      "alias": "vZAny_Consumer",
+      "remove_properties": ["childAction", "lcOwn", "modTs", "status", "tCl"]
+    },
+    {
+      "name": "Loading Provider vzAny",
+      "key": "vzRtAnyToProv",
+      "alias": "vZAny_Provider",
+      "remove_properties": ["childAction", "lcOwn", "modTs", "status", "tCl"]
     },
     {
       "name": "Loading Static Path Detail",
@@ -207,71 +418,6 @@
       ]
     },
     {
-      "name": "Loading LLDP Adj Endpoint Detail",
-      "key": "lldpAdjEp",
-      "alias": "LLDP_Adj",
-      "remove_properties": [
-        "childAction",
-        "id",
-        "name",
-        "status",
-        "ttl",
-        "mgmtId",
-        "enCap",
-        "monPolDn",
-        "portVlan",
-        "modTs"
-      ]
-    },
-    {
-      "name": "Loading BD Subnet Detail",
-      "key": "fvSubnet",
-      "alias": "BD_Subnet",
-      "remove_properties": [
-        "childAction",
-        "configIssues",
-        "debugMessage",
-        "descr",
-        "extMngdBy",
-        "ipDPLearning",
-        "lcOwn",
-        "monPolDn",
-        "name",
-        "nameAlias",
-        "preferred",
-        "status",
-        "uid",
-        "userdom",
-        "virtual",
-        "ctrl",
-        "modTs"
-      ]
-    },
-    {
-      "name": "Loading ACI Contract Detail",
-      "key": "vzBrCP",
-      "alias": "ACI_Contract",
-      "remove_properties": [
-        "accessPrivilege",
-        "childAction",
-        "configIssues",
-        "descr",
-        "extMngdBy",
-        "intent",
-        "lcOwn",
-        "modTs",
-        "monPolDn",
-        "nameAlias",
-        "ownerKey",
-        "ownerTag",
-        "status",
-        "uid",
-        "userdom",
-        "scope",
-        "prio"
-      ]
-    },
-    {
       "name": "Loading L3Out Static Routes",
       "key": "ipRouteP",
       "alias": "L3out_route",
@@ -314,164 +460,6 @@
       ]
     },
     {
-      "name": "Loading Provider Contract",
-      "key": "fvRsProv",
-      "alias": "Provider_Contract",
-      "remove_properties": [
-        "accessPrivilege",
-        "childAction",
-        "ctrctUpd",
-        "extMngdBy",
-        "intent",
-        "lcOwn",
-        "modTs",
-        "monPolDn",
-        "prio",
-        "rType",
-        "state",
-        "stateQual",
-        "status",
-        "tCl",
-        "tContextDn",
-        "matchT",
-        "forceResolve",
-        "tType",
-        "triggerSt",
-        "tRn",
-        "uid",
-        "updateCollection",
-        "userdom"
-      ]
-    },
-    {
-      "name": "Loading Consumer Contract",
-      "key": "fvRsCons",
-      "alias": "Consumer_Contract",
-      "remove_properties": [
-        "accessPrivilege",
-        "childAction",
-        "ctrctUpd",
-        "deplInfo",
-        "extMngdBy",
-        "intent",
-        "lcOwn",
-        "modTs",
-        "monPolDn",
-        "prio",
-        "rType",
-        "state",
-        "stateQual",
-        "status",
-        "tCl",
-        "tContextDn",
-        "forceResolve",
-        "tType",
-        "triggerSt",
-        "tRn",
-        "uid",
-        "updateCollection",
-        "userdom"
-      ]
-    },
-    {
-      "name": "Loading Filter",
-      "key": "vzEntry",
-      "alias": "Filter",
-      "remove_properties": [
-        "accessPrivilege",
-        "applyToFrag",
-        "arpOpc",
-        "childAction",
-        "descr",
-        "nameAlias",
-        "sFromPort",
-        "sToPort",
-        "stateful",
-        "status",
-        "tcpRules",
-        "uid",
-        "userdom",
-        "extMngdBy",
-        "icmpv6T",
-        "icmpv4T",
-        "lcOwn",
-        "matchDscp",
-        "modTs",
-        "monPolDn"
-      ]
-    },
-    {
-      "name": "Loading EGP BD Mapping",
-      "key": "fvRsBd",
-      "alias": "EPG_BD",
-      "remove_properties": [
-        "annotation",
-        "childAction",
-        "extMngdBy",
-        "forceResolve",
-        "lcOwn",
-        "modTs",
-        "monPolDn",
-        "rType",
-        "state",
-        "stateQual",
-        "status",
-        "tCl",
-        "tContextDn",
-        "tType",
-        "uid",
-        "userdom",
-        "tRn"
-      ]
-    },
-    {
-      "name": "Loading EGP BD Mapping",
-      "key": "faultInst",
-      "alias": "Fault_Instance",
-      "remove_properties": ["title"]
-    },
-    {
-      "name": "Loading Consumer EPG of contract",
-      "key": "vzRtCons",
-      "alias": "Consumer_EPG_of_contract",
-      "remove_properties": ["childAction", "modTs", "lcOwn", "tCl", "status"]
-    },
-    {
-      "name": "Loading Provider EPG of contract",
-      "key": "vzRtProv",
-      "alias": "Provider_EPG_of_contract",
-      "remove_properties": ["childAction", "modTs", "lcOwn", "tCl", "status"]
-    },
-    {
-      "name": "Loading filter of contract",
-      "key": "vzRsSubjFiltAtt",
-      "alias": "filter_of_contract",
-      "remove_properties": [
-        "action",
-        "annotation",
-        "directives",
-        "forceResolve",
-        "lcOwn",
-        "priorityOverride",
-        "tCl",
-        "tDn",
-        "tRn",
-        "accessPrivilege",
-        "childAction",
-        "extMngdBy",
-        "modTs",
-        "monPolDn",
-        "rType",
-        "state",
-        "stateQual",
-        "status",
-        "tType",
-        "uid",
-        "userdom",
-        "tContextDn"
-      ]
-    },
-    {
       "name": "Loading Physcial Interface",
       "key": "l1PhysIf",
       "alias": "Physcial_Interface",
@@ -505,6 +493,29 @@
         "status",
         "trunkLog"
       ]
+    },
+    {
+      "name": "Loading LLDP Adj Endpoint Detail",
+      "key": "lldpAdjEp",
+      "alias": "LLDP_Adj",
+      "remove_properties": [
+        "childAction",
+        "id",
+        "name",
+        "status",
+        "ttl",
+        "mgmtId",
+        "enCap",
+        "monPolDn",
+        "portVlan",
+        "modTs"
+      ]
+    },
+    {
+      "name": "Loading Fault",
+      "key": "faultInst",
+      "alias": "Fault_Instance",
+      "remove_properties": ["title"]
     },
     {
       "name": "Loading Transceviers Info",

@@ -1,24 +1,31 @@
 # py_aciscript
 
-### Project Structure
+## Project Structure
 
 ```sh
 py_aciscript
 └── config
    ├── logging.dev.json       <- log config
    ├── logging.prod.json
+   └── n1_apic_input.json     <- input config file
 └── log                       <- log directory
 └── src
    ├── pyapicapi.py           <- module for apic api
    └── pyapicanaylsis.py      <- module for apic anaylsis
 ```
 
-fvAEPg
-dn > tn,ap,\*epg
+## pyapicapi.py
 
-fvRsBd
-dn > tn>bd
+Get cisco apic info using rest api
 
-fvSubnet
-dn > tn,ap,epg
-dn > tn,bd
+1. prepare xxx_input.json config file in config folder
+2. run pyapicapi.py
+
+## pyapicanaylsis_contract.py
+
+Anaylsis table from pyapicapi.py
+
+- epgbd_ip
+- filter
+- contract
+- contract_epgip
