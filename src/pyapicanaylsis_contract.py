@@ -166,15 +166,15 @@ def process_script() -> None:
     outfile = f"apic_{outfile_env}_contract_{get_datetime()}.xlsx"
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
     tshoot = 0
+    export_df_to_xlsx(writer, df_epgbd_ip, 'epgbd_ip')
+    export_df_to_xlsx(writer, df_vzRsSubjFiltAtt_out, 'filter')
+    export_df_to_xlsx(writer, df_contract_all, 'contract')
+    export_df_to_xlsx(writer, df_contract_epgip, 'contract_epgip')
     if tshoot == 1:
         export_df_to_xlsx(writer, df_fvRsBd, 'fvRsBd')
         export_df_to_xlsx(writer, df_fvSubnet, 'fvSubnet')
         export_df_to_xlsx(writer, df_fvRsCons, 'fvRsCons')
         export_df_to_xlsx(writer, df_fvRsProv, 'fvRsProv')
-    export_df_to_xlsx(writer, df_epgbd_ip, 'epgbd_ip')
-    export_df_to_xlsx(writer, df_vzRsSubjFiltAtt_out, 'filter')
-    export_df_to_xlsx(writer, df_contract_all, 'contract')
-    export_df_to_xlsx(writer, df_contract_epgip, 'contract_epgip')
 
     writer.close()
     return
