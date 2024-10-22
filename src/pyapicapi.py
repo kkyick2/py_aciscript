@@ -3,6 +3,7 @@ import logging.config
 import os, re, json, requests
 import pandas as pd
 from datetime import datetime
+from pathlib import Path
 PARENT_DIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ), os.pardir))
 DATETIME = datetime.now().strftime("%Y%m%d_%H%M%S")
 LOG_ENV = 'dev'
@@ -17,9 +18,10 @@ def setup_logging() -> None:
         "dev": "logging.dev.json", 
         "prod": "logging.prod.json"
         }
+    log_name = Path(os.path.basename(__file__)).stem # filename without extension
     log_config = log_configs.get(LOG_ENV, "logging.dev.json")
     log_config_path = os.path.join(PARENT_DIR, CONFIG_DIR, log_config)
-    log_file_path = os.path.join(PARENT_DIR, LOG_DIR, f'pyapicapi_{DATETIME}.log')
+    log_file_path = os.path.join(PARENT_DIR, LOG_DIR, f'{log_name}_{DATETIME}.log')
     
     with open(log_config_path, 'r') as f:
         config = json.load(f)
