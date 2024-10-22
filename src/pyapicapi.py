@@ -148,6 +148,7 @@ def read_config_json(in_file: str) -> list:
 
 
 def start_script(args) -> list:
+    logger.info(f'###### Step1')
     infilelist = process_input(args)
     outfilelist = []
 
@@ -162,7 +163,7 @@ def start_script(args) -> list:
     return outfilelist
 
 def process_input(args) -> list:
-
+    infilelist = []
     # option1: input from cli input 
     if args.infiles:
         logger.info(f'###### Step1 - Get config files from python arguments:')
