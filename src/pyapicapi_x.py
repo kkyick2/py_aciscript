@@ -1,6 +1,6 @@
 import logging
 import logging.config
-import argparse, os, re, json, requests
+import os, re, json, requests
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
@@ -9,7 +9,6 @@ DATETIME = datetime.now().strftime("%Y%m%d_%H%M%S")
 LOG_ENV = 'dev'
 LOG_DIR = 'log'
 CONFIG_DIR = 'config'
-CONFIG_DIR_FULL = os.path.join(PARENT_DIR, CONFIG_DIR)
 
 def get_datetime():
     return datetime.now().strftime("%Y%m%d_%H%M")
@@ -69,7 +68,7 @@ def get_apic_api_resp(ip: str, key: str, token: str) -> requests.Response:
     resp = requests.get(url, headers=headers, data=payload, verify=False)
     return resp
 
-def parse_apic_json(key: str, json_obj: list) -> pd.DataFrame:
+def parse_apic_json_to_df(key: str, json_obj: list) -> pd.DataFrame:
     # parse apic json to dataframe
     #               lv1        lv2(key)       lv3
     # json_obj = {'imdata': [{'fabricPod': {'attributes': {'childAction ...  || <class 'dict'>
@@ -146,45 +145,20 @@ def read_config_json(in_file: str) -> list:
     logger.info(f" Info collected, tables to process: {len(config['tables'])}")
     return [config['login'], config['tables']]
 
+def process_script() -> None:
+    config_dir = os.path.join(PARENT_DIR, CONFIG_DIR)
 
-def start_script(args) -> list:
-    infilelist = process_input(args)
-    outfilelist = []
+    # step 1: get config files
+    logger.info(f'###### Step1 - Get config files in: {config_dir}')
+    files = get_config_files_to_list(config_dir)
 
-    logger.info(f'###### Step2 - Process config files: {infilelist}')
-    i = 0
-    for inf in infilelist:
-        logger.info(f'###### {i+1}/{len(infilelist)}, process {inf}')
-        i = i+1
-        outf = process_infile(inf)
-        outfilelist.append(outf)
+    # step 2: user select config file
+    logger.info(f'###### Step2 - Choose input config files from list:')
+    file = promt_user_select_file(files)
 
-    return outfilelist
-
-def process_input(args) -> list:
-
-    # option1: input from cli input 
-    if args.infiles:
-        logger.info(f'###### Step1 - Get config files from python arguments:')
-        infilelist = args.infiles.split(',')
-
-    # option2: input from promt user select
-    if args.infiles == None:
-        # step 1: get config files
-        logger.info(f'###### Step1 - Get config files in folder: {CONFIG_DIR_FULL}')
-        files = get_config_files_to_list(CONFIG_DIR_FULL)
-
-        # step 2: user select config file
-        logger.info(f'###### Step1 - Choose input config files from list:')
-        file = promt_user_select_file(files)
-        infilelist.append(file)
-
-    return infilelist
-
-def process_infile(file: str) -> str:
     # step 3: read config file
     logger.info(f'###### Step3 - Load json config from {file}')
-    [login_info, req_tables] = read_config_json(os.path.join(CONFIG_DIR_FULL, file))
+    [login_info, req_tables] = read_config_json(os.path.join(config_dir, file))
 
     # step 4: login apic
     logger.info(f'###### Step4 - Login apic and get token:')
@@ -202,7 +176,7 @@ def process_infile(file: str) -> str:
         resp = get_apic_api_resp(login_info['ip'], req_tables[i]['key'], token)
 
         # step 5B: Export to df
-        df1 = parse_apic_json(req_tables[i]['key'], resp.json())
+        df1 = parse_apic_json_to_df(req_tables[i]['key'], resp.json())
 
         # step 5C: remove properties column
         if login_info['remove_properties_flag'] == 1:
@@ -210,14 +184,8 @@ def process_infile(file: str) -> str:
 
         # step 5D: export to excel
         export_df_to_xlsx(writer, df1, req_tables[i]['key'])
-
-    logger.info(f'###')
-    logger.info(f'###')
-    logger.info(f'### close out file {outfile}')
-    logger.info(f'###')
-    logger.info(f'###')
     writer.close()
-    return outfile
+    return
 
 if __name__ == "__main__":
 
@@ -228,12 +196,7 @@ if __name__ == "__main__":
     logger.info(f'############################################################## ')
     logger.info(f'##################       START SCRIPT       ################## ')
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--infiles", help="input json in config folder, example: -i n1_input.json,n2_input.json,n3_input.json")
-    args = parser.parse_args()
+    process_script()
 
-    outfilelist = start_script(args)
-
-    logger.info(f'###### Complete, outfiles: {outfilelist}')
     logger.info(f'##################         END SCRIPT       ################## ')
     logger.info(f'############################################################## ')

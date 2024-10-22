@@ -4,13 +4,12 @@ import os, re, json, ipaddress
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
-PARENT_DIR = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), os.pardir))
+PARENT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 DATETIME = datetime.now().strftime("%Y%m%d_%H%M%S")
 LOG_ENV = 'dev'
 LOG_DIR = 'log'
 CONFIG_DIR = 'config'
-
+CONFIG_DIR_FULL = os.path.join(PARENT_DIR, CONFIG_DIR)
 
 def get_datetime():
     return datetime.now().strftime("%Y%m%d_%H%M")
@@ -82,12 +81,11 @@ def calculate_subnet(ip):
         return ''  # Return empty string for invalid gateway formats
 
 
-def process_script() -> None:
-    config_dir = os.path.join(PARENT_DIR)
+def start_script() -> None:
 
     # step 1: get config files
-    logger.info(f'###### Step1 - Get config files in: {config_dir}')
-    files = get_config_files_to_list(config_dir)
+    logger.info(f'###### Step1 - Get config files in: {CONFIG_DIR_FULL}')
+    files = get_config_files_to_list(CONFIG_DIR_FULL)
 
     # step 2: user select config file
     logger.info(f'###### Step2 - Choose input config files from list:')
@@ -165,7 +163,7 @@ if __name__ == "__main__":
     logger.info(f'############################################################## ')
     logger.info(f'##################       START SCRIPT       ################## ')
 
-    process_script()
+    start_script()
 
     logger.info(f'##################         END SCRIPT       ################## ')
     logger.info(f'############################################################## ')

@@ -18,8 +18,15 @@ py_aciscript
 
 Get cisco apic info using rest api
 
-1. prepare xxx_input.json config file in config folder
-2. run pyapicapi.py
+1. Prepare xxx_input.json config file in config folder
+2. Option1: by prompt user to select file
+   ```
+   python src\pyapicapi.py
+   ```
+3. Option2: by input args
+   ```
+   python src\pyapicapi.py -i n1_apic_input.json,n2_apic_input.json
+   ```
 
 ## pyapicanaylsis_contract.py
 
