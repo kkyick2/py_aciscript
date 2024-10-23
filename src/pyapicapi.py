@@ -4,6 +4,8 @@ import argparse, os, re, json, requests
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
+import pyapicanaylsis_interface
+import pyapicanaylsis_contract
 PARENT_DIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ), os.pardir))
 DATETIME = datetime.now().strftime("%Y%m%d_%H%M%S")
 LOG_ENV = 'dev'
@@ -102,7 +104,7 @@ def get_config_files_to_list(dir: str) -> list:
             matched_files.append(f)
     return matched_files
 
-def promt_user_select_file(files: list) -> str:
+def prompt_select_file(files: list) -> str:
     if len(files) == 1:
         logger.info(f' 0) {files[0]}')
         selected_file = files[0]
@@ -148,6 +150,10 @@ def read_config_json(in_file: str) -> list:
 
 
 def start_script(args) -> list:
+    logger.info(f'###')
+    logger.info(f'###')
+    logger.info(f'############################################################## ')
+    logger.info(f'##################       START SCRIPT       ################## ')
     logger.info(f'###### Step1')
     infilelist = process_input(args)
     outfilelist = []
@@ -159,7 +165,7 @@ def start_script(args) -> list:
         i = i+1
         outf = process_infile(inf)
         outfilelist.append(outf)
-
+    logger.info(f'###### Complete, outfiles: {outfilelist}')
     return outfilelist
 
 def process_input(args) -> list:
@@ -177,7 +183,7 @@ def process_input(args) -> list:
 
         # step 2: user select config file
         logger.info(f'###### Step1 - Choose input config files from list:')
-        file = promt_user_select_file(files)
+        file = prompt_select_file(files)
         infilelist.append(file)
 
     return infilelist
@@ -214,27 +220,34 @@ def process_infile(file: str) -> str:
 
     logger.info(f'###')
     logger.info(f'###')
-    logger.info(f'### close out file {outfile}')
+    logger.info(f'### close output: {outfile}')
     logger.info(f'###')
     logger.info(f'###')
     writer.close()
     return outfile
 
-if __name__ == "__main__":
-
-    setup_logging()
-    logger = logging.getLogger(__name__)
-    logger.info(f'###')
-    logger.info(f'###')
-    logger.info(f'############################################################## ')
-    logger.info(f'##################       START SCRIPT       ################## ')
-
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infiles", help="input json in config folder, example: -i n1_input.json,n2_input.json,n3_input.json")
+    parser.add_argument("-a", "--anaylsis", action ='store_true', help="flag to analysis and parse table to new excel")
     args = parser.parse_args()
 
     outfilelist = start_script(args)
 
-    logger.info(f'###### Complete, outfiles: {outfilelist}')
+    if args.anaylsis:
+        logger.info(f'######  ')
+        logger.info(f'###### anaylsis argument enabled, analysis and parse table to new excel')
+        logger.info(f'######  ')
+        for file in outfilelist:
+            args2 = argparse.Namespace()
+            args2.infiles = file
+            pyapicanaylsis_interface.start_script(args2)
+            pyapicanaylsis_contract.start_script(args2)
+
     logger.info(f'##################         END SCRIPT       ################## ')
     logger.info(f'############################################################## ')
+
+if __name__ == "__main__":
+    setup_logging()
+    logger = logging.getLogger(__name__)
+    main()

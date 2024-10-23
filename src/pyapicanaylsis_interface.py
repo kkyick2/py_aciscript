@@ -1,6 +1,6 @@
 import logging
 import logging.config
-import os, re, json, ipaddress
+import argparse, os, re, json, ipaddress
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
@@ -11,9 +11,10 @@ LOG_DIR = 'log'
 CONFIG_DIR = 'config'
 CONFIG_DIR_FULL = os.path.join(PARENT_DIR, CONFIG_DIR)
 
+logger = logging.getLogger(__name__)
+
 def get_datetime():
     return datetime.now().strftime("%Y%m%d_%H%M")
-
 
 def setup_logging() -> None:
     log_configs = {
@@ -48,7 +49,7 @@ def get_config_files_to_list(dir: str) -> list:
     return matched_files
 
 
-def promt_user_select_file(files: list) -> str:
+def prompt_select_file(files: list) -> str:
 
     if len(files) == 1:
         logger.info(f' 0) {files[0]}')
@@ -79,21 +80,46 @@ def calculate_subnet(ip):
         return str(network)  # Return the network address as a string
     except ValueError:
         return ''  # Return empty string for invalid gateway formats
+    
+def start_script(args) -> list:
+    logger.info(f'###### Step1')
+    infilelist = process_input(args)
+    outfilelist = []
 
+    logger.info(f'###### Step2 - Process excel files: {infilelist}')
+    i = 0
+    for inf in infilelist:
+        logger.info(f'###### {i+1}/{len(infilelist)}, process {inf}')
+        i = i+1
+        outf = process_infile(inf)
+        outfilelist.append(outf)
 
-def start_script() -> None:
+    return outfilelist
 
-    # step 1: get config files
-    logger.info(f'###### Step1 - Get config files in: {CONFIG_DIR_FULL}')
-    files = get_config_files_to_list(CONFIG_DIR_FULL)
+def process_input(args) -> list:
+    infilelist = []
+    # option1: input from cli input 
+    if args.infiles:
+        logger.info(f'###### Step1 - Get api excel from python arguments:')
+        infilelist = args.infiles.split(',')
 
-    # step 2: user select config file
-    logger.info(f'###### Step2 - Choose input config files from list:')
-    file = promt_user_select_file(files)
+    # option2: input from promt user select
+    if args.infiles == None:
+        # step 1: get config files
+        logger.info(f'###### Step1 - Get api excel in: {PARENT_DIR}')
+        files = get_config_files_to_list(PARENT_DIR)
 
+        # step 2: user select config file
+        logger.info(f'###### Step2 - Choose input excel from list:')
+        file = prompt_select_file(files)
+        infilelist.append(file)
+
+    return infilelist
+
+def process_infile(file: str) -> None:
     # step 3: column operation
     # ===========================================================================
-
+    logger.info(f'###### Step3 - Process excel: {file}')
     # step 3A: Get system
     # topSystem ========================================
     df_topSystem = pd.read_excel(file, sheet_name='topSystem')
@@ -140,7 +166,7 @@ def start_script() -> None:
     outfile_env = file.split("_")[1]
     outfile = f"apic_{outfile_env}_interface_{get_datetime()}.xlsx"
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
-    tshoot = 1
+    tshoot = 0
     export_df_to_xlsx(writer, df_topSystem, 'topSystem')
     export_df_to_xlsx(writer, df_interface, 'interface')
     export_df_to_xlsx(writer, df_epg_encap, 'epg_encap')
@@ -150,20 +176,30 @@ def start_script() -> None:
         export_df_to_xlsx(writer, df_ethpmPhysIf, 'ethpmPhysIf')
         export_df_to_xlsx(writer, df_fvRsPathAtt, 'fvRsPathAtt')
 
+    logger.info(f'###')
+    logger.info(f'###')
+    logger.info(f'### close output: {outfile}')
+    logger.info(f'###')
+    logger.info(f'###')
     writer.close()
     return
 
-
-if __name__ == "__main__":
-
-    setup_logging()
-    logger = logging.getLogger(__name__)
+def main():
     logger.info(f'###')
     logger.info(f'###')
     logger.info(f'############################################################## ')
     logger.info(f'##################       START SCRIPT       ################## ')
 
-    start_script()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--infiles", help="input excel from pyapicapi.py, example: -i n1_20240101.xlsx")
+    args = parser.parse_args()
+
+    start_script(args)
 
     logger.info(f'##################         END SCRIPT       ################## ')
     logger.info(f'############################################################## ')
+
+if __name__ == "__main__":
+    setup_logging()
+    logger = logging.getLogger(__name__)
+    main()
