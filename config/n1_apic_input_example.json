@@ -1,8 +1,8 @@
 {
   "login": {
     "username": "admin",
-    "password": "password",
-    "environment": "np1",
+    "password": "pass",
+    "environment": "n1",
     "ip": "172.31.1.1:443",
     "remove_properties_flag": 1
   },
@@ -179,6 +179,12 @@
         "ctrl",
         "modTs"
       ]
+    },
+    {
+      "name": "Loading VRF BD Mapping",
+      "key": "fvRtCtx",
+      "alias": "VRF_BD",
+      "remove_properties": ["childAction", "lcOwn", "modTs", "status", "tCl"]
     },
     {
       "name": "Loading Filter",
@@ -460,9 +466,57 @@
       ]
     },
     {
-      "name": "Loading Physcial Interface",
+      "name": "Loading EXT EPG",
+      "key": "l3extInstP",
+      "alias": "extepg",
+      "remove_properties": [
+        "annotation",
+        "childAction",
+        "configIssues",
+        "exceptionTag",
+        "extMngdBy",
+        "lcOwn",
+        "matchT",
+        "modTs",
+        "monPolDn",
+        "nameAlias",
+        "pcTag",
+        "pcTagAllocSrc",
+        "prefGrMemb",
+        "prio",
+        "scope",
+        "status",
+        "targetDscp",
+        "triggerSt",
+        "txId",
+        "uid",
+        "userdom"
+      ]
+    },
+    {
+      "name": "Loading EXT EPG Subnet",
+      "key": "l3extSubnet",
+      "alias": "extepg_subnet",
+      "remove_properties": [
+        "aggregate",
+        "annotation",
+        "childAction",
+        "extMngdBy",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "name",
+        "nameAlias",
+        "scope",
+        "status",
+        "uid",
+        "userdom"
+      ]
+    },
+    {
+      "name": "Loading Interface Physcial ",
       "key": "l1PhysIf",
-      "alias": "Physcial_Interface",
+      "alias": "InterfacePhy",
       "remove_properties": [
         "linkDebounce",
         "breakT",
@@ -495,6 +549,43 @@
       ]
     },
     {
+      "name": "Loading Interface Info",
+      "key": "ethpmPhysIf",
+      "alias": "InterfaceInfo",
+      "remove_properties": [
+        "accessVlan",
+        "backplaneMac",
+        "cfgAccessVlan",
+        "cfgNativeVlan",
+        "childAction",
+        "currErrIndex",
+        "diags",
+        "errDisTimerRunning",
+        "errVlanStatusHt",
+        "errVlans",
+        "hwBdId",
+        "hwResourceId",
+        "iod",
+        "lastErrors",
+        "media",
+        "modTs",
+        "monPolDn",
+        "operEEERxWkTime",
+        "operEEEState",
+        "operEEETxWkTime",
+        "operErrDisQual",
+        "operFlowCtrl",
+        "numOfSI",
+        "osSum",
+        "portCfgWaitFlags",
+        "resetCtr",
+        "siList",
+        "txT",
+        "userCfgdFlags",
+        "vdcId"
+      ]
+    },
+    {
       "name": "Loading LLDP Adj Endpoint Detail",
       "key": "lldpAdjEp",
       "alias": "LLDP_Adj",
@@ -516,6 +607,38 @@
       "key": "faultInst",
       "alias": "Fault_Instance",
       "remove_properties": ["title"]
+    },
+    {
+      "name": "Loading Access Base Group",
+      "key": "infraRsAccBaseGrp",
+      "alias": "AccessBaseGp",
+      "remove_properties": [
+        "annotation",
+        "childAction",
+        "extMngdBy",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "status",
+        "uid",
+        "userdom"
+      ]
+    },
+    {
+      "name": "Loading Access Bundle Group",
+      "key": "infraAccBndlGrp",
+      "alias": "AccessBundleGp",
+      "remove_properties": [
+        "annotation",
+        "childAction",
+        "extMngdBy",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "status",
+        "uid",
+        "userdom"
+      ]
     },
     {
       "name": "Loading Transceviers Info",
