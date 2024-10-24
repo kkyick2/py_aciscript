@@ -37,15 +37,12 @@ def setup_logging() -> None:
     logging.config.dictConfig(config)
     return
 
-def get_apic_token(ip: str, username: str, password: str) -> str:
-    url = f'https://{ip}/api/aaaLogin.json'
+def get_token(ip: str, username: str, password: str) -> str:
+    url = f'https://{ip}/login'
     payload = {
-        "aaaUser": {
-            "attributes": {
-                "name": username,
-                "pwd": password,
-            }
-        }
+        "userName": username,
+        "userPasswd": password,
+        "domain": "local"
     }
     headers = {
         "Accept":"application/json",
@@ -53,33 +50,45 @@ def get_apic_token(ip: str, username: str, password: str) -> str:
     }
     requests.packages.urllib3.disable_warnings()
     resp = requests.post(url, headers=headers, data=json.dumps(payload), verify=False)
-    token = resp.json()['imdata'][0]['aaaLogin']['attributes']['token']
+    token = resp.json()['token']
 
     logger.info(f'Token: {token}')
     return token
 
-def get_apic_api_resp(ip: str, key: str, token: str) -> requests.Response:
-    url = f'https://{ip}/api/class/{key}.json'
+def get_api_resp(ip: str, uri: str, key: str, token: str) -> requests.Response:
+    url = f'https://{ip}/api/v1/{uri}'
     payload={}
     headers = {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Cookie" : f'APIC-Cookie={token}'
+        "Authorization" : f'Bearer {token}'
     }
 
-    logger.info(f' Login apic api: {key} - {url}')
+    logger.info(f' Login mso api: {key} - {url}')
     resp = requests.get(url, headers=headers, data=payload, verify=False)
     return resp
 
-def parse_apic_json(json_obj: list, key: str) -> pd.DataFrame:
-    # parse apic json to dataframe
-    #               lv1        lv2(key)       lv3
-    # json_obj = {'imdata': [{'fabricPod': {'attributes': {'childAction ...  || <class 'dict'>
-    # data_list = json_obj[imdata] = {'fabricPod': {'attributes': {'childAction ...}, <class 'list'>
-    #                                {'fabricPod': {'attributes': {'childAction ...},
+def parse_mso_json(json_obj: list, key: str, **kwargs) -> pd.DataFrame:
+    # parse json to dataframe
+
+    # case1: 
+    # {"tenants": {
+    #    "0000ffff0000000000000011": [],
+    #    "626905ec20000023d9fe361b": [{
+    #        "id": "6269064b2000002ad9fe361c",
+    #        "displayName": "schema-prod",
+    # case2:
+    #   {'sites': [{'id': .  || <class 'dict'>
+    #
     parsed_data = []
-    for data in json_obj['imdata']:
-        parsed_data.append(data[key]['attributes'])
+    if kwargs:
+        # case1 tenant > tenants_id
+        tenants_id = kwargs['tenants_id']
+        for data in json_obj[key][tenants_id]:
+            parsed_data.append(data)
+    else:
+        for data in json_obj[key]:
+            parsed_data.append(data)
     df = pd.DataFrame(parsed_data)
     logger.info(f' Exported to dataframe, size: {df.shape}')
     return df
@@ -99,7 +108,7 @@ def get_config_files_to_list(dir: str) -> list:
     matched_files = []
     files = os.listdir(dir)
     for f in files:
-        m = re.search("(.*)apic.json",f)
+        m = re.search("(.*)mso.json",f)
         if m:
             matched_files.append(f)
     return matched_files
@@ -193,30 +202,36 @@ def process_infile(file: str) -> str:
     logger.info(f'###### Step3 - Load json config from {file}')
     [login_info, req_tables] = read_config_json(os.path.join(CONFIG_DIR_FULL, file))
 
-    # step 4: login apic
-    logger.info(f'###### Step4 - Login apic and get token:')
-    token = get_apic_token(login_info['ip'], login_info['username'], login_info['password'])
+    # step 4: login mso
+    logger.info(f'###### Step4 - Login mso and get token:')
+    token = get_token(login_info['ip'], login_info['username'], login_info['password'])
 
-    # step 5: process apic api and export to excel
+    # step 5: process mso api and export to excel
     # Prepare excel writer
-    outfile = f"apic_{login_info['environment']}_{get_datetime()}.xlsx"
+    outfile = f"mso_{login_info['environment']}_{get_datetime()}.xlsx"
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
     logger.info(f'###### Step5 - Start processing, export to {outfile}')
 
     for i in range(len(req_tables)):
         logger.info(f" ### [{i + 1}/{len(req_tables)}], process {req_tables[i]['key']}")
         # step 5A: Get api resp
-        resp = get_apic_api_resp(login_info['ip'], req_tables[i]['key'], token)
+        resp = get_api_resp(login_info['ip'], req_tables[i]['uri'], req_tables[i]['key'], token)
 
         # step 5B: Export to df
-        df1 = parse_apic_json(resp.json(), req_tables[i]['key'])
+        if 'tenants_id' in req_tables[i]:
+            df1 = parse_mso_json(resp.json(), req_tables[i]['key'], tenants_id = req_tables[i]['tenants_id'])
+            sheetname = f"{req_tables[i]['uri']}_{req_tables[i]['tenants_id']}"
+        else:
+            df1 = parse_mso_json(resp.json(), req_tables[i]['key'])
+            sheetname = req_tables[i]['uri']
 
         # step 5C: remove properties column
         if login_info['remove_properties_flag'] == 1:
             df1 = remove_columns(df1, req_tables[i]['remove_properties'])
 
         # step 5D: export to excel
-        export_df_to_xlsx(writer, df1, req_tables[i]['key'])
+        sheetname = re.sub(r'/', '_', sheetname)
+        export_df_to_xlsx(writer, df1, sheetname)
 
     logger.info(f'###')
     logger.info(f'###')
@@ -228,21 +243,10 @@ def process_infile(file: str) -> str:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--infiles", help="input json in config folder, example: -i n1_apic.json,n2_apic.json")
-    parser.add_argument("-a", "--anaylsis", action ='store_true', help="flag to analysis and parse table to new excel")
+    parser.add_argument("-i", "--infiles", help="input json in config folder, example: -i n1_mso.json,p1_mso.json")
     args = parser.parse_args()
 
     outfilelist = start_script(args)
-
-    if args.anaylsis:
-        logger.info(f'######  ')
-        logger.info(f'###### anaylsis argument enabled, analysis and parse table to new excel')
-        logger.info(f'######  ')
-        for file in outfilelist:
-            args2 = argparse.Namespace()
-            args2.infiles = file
-            pyapicanaylsis_interface.start_script(args2)
-            pyapicanaylsis_contract.start_script(args2)
 
     logger.info(f'##################         END SCRIPT       ################## ')
     logger.info(f'############################################################## ')
