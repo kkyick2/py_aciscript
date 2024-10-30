@@ -162,6 +162,19 @@ def process_infile(file: str) -> None:
     df_intf_encap = df_intf_encap.groupby('tDn')['encap'].agg(lambda col: ','.join(col.unique())).reset_index()    # group
     df_intf_encap = df_intf_encap.sort_values(by=['tDn'])
 
+    # step 3D: Get interface profile
+    # infraRsAccBaseGrp ========================================
+    df_infraRsAccBaseGrp = pd.read_excel(file, sheet_name='infraRsAccBaseGrp')
+    df_intf_profile = df_infraAccBndlGrp[['dn', 'tCl', 'tDn']]
+    df_intf_profile['dn'] = df_intf_profile['dn'].str.replace(r'/rsaccBaseGrp$', '', regex=True)
+    df_intf_profile = df_intf_profile.sort_values(by=['dn'])
+
+    # step 3D: Get port channel / vpc profile
+    # infraRsAccBaseGrp ========================================
+    df_infraAccBndlGrp = pd.read_excel(file, sheet_name='infraAccBndlGrp')
+    df_vpc_profile = df_infraAccBndlGrp[['dn', 'name', 'descr']]
+    df_vpc_profile = df_vpc_profile.sort_values(by=['dn'])
+
     # step 99: export result to xlsx apic_n1_xxxx_20241016_1335.xlsx
     outfile_env = file.split("_")[1]
     outfile = f"apic_{outfile_env}_interface_{get_datetime()}.xlsx"
@@ -171,6 +184,8 @@ def process_infile(file: str) -> None:
     export_df_to_xlsx(writer, df_interface, 'interface')
     export_df_to_xlsx(writer, df_epg_encap, 'epg_encap')
     export_df_to_xlsx(writer, df_intf_encap, 'intf_encap')
+    export_df_to_xlsx(writer, df_intf_profile, 'intf_prof')
+    export_df_to_xlsx(writer, df_vpc_profile, 'vpc_prof')
     if tshoot == 1:
         export_df_to_xlsx(writer, df_l1PhysIf, 'l1PhysIf')
         export_df_to_xlsx(writer, df_ethpmPhysIf, 'ethpmPhysIf')
