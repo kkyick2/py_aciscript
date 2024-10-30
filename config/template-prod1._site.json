@@ -1,0 +1,1403 @@
+{
+  "id": "626909e259faeb2b95b840af",
+  "schemaId": "6269064b2000002ad9fe361c",
+  "templateName": "template-prod1",
+  "template": {
+    "name": "template-prod1",
+    "displayName": "template-prod1",
+    "tenantId": "626905ec20000023d9fe361b",
+    "anps": [],
+    "vrfs": [],
+    "bds": [],
+    "contracts": [],
+    "filters": [],
+    "externalEpgs": [
+      {
+        "name": "ext-p1-edgewan",
+        "displayName": "ext-p1-edgewan",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.110.0.0/16",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "10.51.0.0/16",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-edgewan_STG"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-APIM-Runtime-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-Cyberark-CPM-c-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-Cyberark-PSM-c-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-edgewan_NETSEC-fileserver"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-K8SN-Infra-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-WEBP-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-WEBI-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-DCMS-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-IEML-PRD-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-APPM-EUM-P_sg"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-edgewan-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-EFOR-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-PBI-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-Splunk-UI_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_Splunk-UI"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-GENESYS-WEB-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-CHATBOT-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-CHATBOT-IVR-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-ABBY-APP-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-NAPIER-ING-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-DMSW-Web-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-VRNT-CMKMWeb-P_sg"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-NBU-Mgmt_ext-edgewan"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-PBI-prodApp-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-QMS-App-P_sg"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-vrf-eMPF_Proxy"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_Nessus-MgmtApp"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_ITSM-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_ITSM-uCMDB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_OO-Central"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_OB-CloudOpt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_NNMi-RM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_OB-OBM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_OB-SiteScope"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-CAAD-App-P-1_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_STG-iFast"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-DATAGW-pdm2SFTP_ext-edgewan"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-APIM-pdmRuntime-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-EFKN-Kibana-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-DCMS-App-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-edgewan_STAG-Int"
+          }
+        ],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-edgewan",
+        "l3outRef": "",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-fabric-default",
+        "displayName": "ext-p1-fabric-default",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-common",
+        "subnets": [
+          {
+            "ip": "0.0.0.0/0",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "10.110.0.0/16",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "172.31.110.0/23",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "172.31.112.0/23",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "172.17.128.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-OB-DB-P"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ext-fabric-default"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-vrf-common_SA"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-SA_vrf-common"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-CPM-c-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-PSM-c-P"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-vrf-common_Splunk"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ITSM-uCMDB_vrf-common"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-OB-SiteScope_vrf-common"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_ext-fabric-default"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-Vault-P"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_HVAULT-App"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_CAAD-App"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_GDNS-WIN"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ABBY-APP"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ABBY-DBBY"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-default_MS-DCRadius-c"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PBI-prodApp"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PIG-Gateway"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PIG-Core"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PIG-Mgmt"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-vrf-common_Proxy"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_RHDS-LDAP"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_ESXi-Mgmt"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_ESXi-VCSA"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-Cyberark-PSM-c_ESXi-Mgmt"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-Cyberark-PSM-c_ESXi-VCSA"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_NAPIER-App"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_NAPIER-ING"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_OCC_OOB"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-Cyberark-PSM-c_OCC_OOB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-prod_nonprod_STG-Windows-c"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_EVTB-MONDB"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_EMAILGA-EXWS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-RDS-Windows_STG-Windows-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-callcentre_STG-Windows-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-occosc_STG-Windows-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-edgewan_STG-Windows-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-WSUS-Mgmt_vrf-common"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_WSUS-Mgmt"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-DB"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-SiteScope"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-OBM"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_NNMi-RM"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-CloudOpt"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OO-Central"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ITSM-uCMDB"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ITSM-DB"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_EFKN-Kibana"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ITSM-SHM_vrf-common"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_TDNS-WIN"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_RDS-Windows"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-vrf-common_WSUS-Mgmt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-AOST-AO_STG-Windows-c"
+          }
+        ],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-fabric-default",
+        "l3outRef": "",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-fabric-vrf-common",
+        "displayName": "ext-p1-fabric-vrf-common",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.119.0.0/16",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "10.110.101.56/29",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-OB-DB-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_Cyberark-Vault"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-vrf-eMPF_MS-DCRadius-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_ORAC-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_ITSM-DB"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-CPM-c-P"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-PSM-c-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-CONT-EM-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_OLVM-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EVTB-BKR"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EVTB-MON"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EMAILG-EXCH"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EMAILG-FORTI"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_CICD-Pipeline"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_WEBI-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_WEBP-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-CIM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-CXI"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-ESS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-RPT"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-SIP"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-VPS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-WEB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-WFM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_GENESYS-GSS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_CHATBOT-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_CHATBOT-IVR"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-CMKMDA"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-CMKMBE"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-CMKMRPT"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-CMKMWeb"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-CMKMCIFS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_VRNT-AppCIFS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_QMS-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_QMS-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_FAXAPP"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_FAXDB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_KIOSK-Mgmt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_AUDIOC-FAXSS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_APPM-CTL"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_DCMS-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EFKN-Elastic"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EFKN-FluentD"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EFKN-Kibana"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_PBI-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_PBI-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_Imperva-DRA"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_Imperva-DAM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_Imperva-MX"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EMAILG-EXWS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_ORAC-OEM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_DMSW-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-APPM-CTL-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-APPM-ESN-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_DMSW-Web"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_NNMi-RM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-EFKN-FluentD-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-APIM-PCE-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-NAPIER-ING-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-K8SN-Infra-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-K8SN-Master-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-RHDS-LDAP-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-DMSW-Web-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-DMSW-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-DCMS-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-EFKN-Kibana-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-CPM-c_vrf-eMPF"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-Cyberark-CPM-c-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-PSM-c_vrf-eMPF"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-Cyberark-PSM-c-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Mcafee-AgentH-c_vrf-eMPF"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-vrf-eMPF_Mcafee-AgentH-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-ext-fabric-vrf-common_VRNT-CMKMWeb_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_ext-prod_nonprod"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_IEML-PRD"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-Cyberark-Vault-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_HVAULT-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-HVAULT-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_CAAD-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-fabric-vrf-common_EFKN-Grafana"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-CHATBOT-App-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-CHATBOT-IVR-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_SDS-IPSC2Data1"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_GDNS-WIN"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_SDS-IPSC2Data2"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_SDS-IPSC2Data3"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ABBY-APP"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ABBY-DBBY"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PBI-prodApp"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-PBI-prodApp-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PIG-Gateway"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PIG-Core"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_PIG-Mgmt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-fabric-vrf-common_ext-svccentre"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-EMAILG-FORTI_MS-DCRadius-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/ct-EVTB-BKR-P_sg"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_RHDS-LDAP"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_ESXi-Mgmt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_ESXi-VCSA"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-Cyberark-PSM-c_ESXi-Mgmt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-Cyberark-PSM-c_ESXi-VCSA"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_NAPIER-App"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_NAPIER-ING"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-prod_nonprod_STG-Windows-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_EVTB-MONDB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_EMAILGA-EXWS"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-RDS-Windows_STG-Windows-c"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_WSUS-Mgmt"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-EMAILG-FORTI_ext-fabric-vrf-common"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-SiteScope"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-OBM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_NNMi-RM"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OB-CloudOpt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_OO-Central"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ITSM-uCMDB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_ITSM-DB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_vrf-eMPF"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-STG-Windows-c_EFKN-Kibana"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-MS-DCRadius-c_TDNS-WIN"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-Nessus-Scanner_ESXi"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STG-Windows-c_RDS-Windows"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-AOST-AO_STG-Windows-c"
+          }
+        ],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-fabric-vrf-common",
+        "l3outRef": "",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-oobmgmt",
+        "displayName": "ext-p1-oobmgmt",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "172.31.110.0/23",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "172.31.112.0/23",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "172.31.119.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-p1-oobmgmt_HDS-Ops_bi"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-p1-oobmgmt_HDS-Ops_bi"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-oobmgmt_CFGA-BKUP"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-oobmgmt_Thales-KMS"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-oobmgmt_ITSM-uCMDB"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-edgewan-P"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-oobmgmt-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-oobmgmt_NNMi"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-oobmgmt_GDNS-WIN"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-oobmgmt_NETSEC-fileserver"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-oobmgmt_Radware-APS"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-Radware-APS_ext-oobmgmt"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-STAG-Int_ext-oobmgmt"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-oobmgmt_NNMi-TL"
+          }
+        ],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-oobmgmt",
+        "l3outRef": "",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-tn_mgmt",
+        "displayName": "ext-p1-tn_mgmt",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.111.254.0/23",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/contracts/permit-any"
+          }
+        ],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-tn_mgmt",
+        "l3outRef": "",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-empfnet",
+        "displayName": "ext-p1-empfnet",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.31.16.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "172.17.128.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          },
+          {
+            "ip": "172.28.88.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-empfnet_DATAGW-SFTP"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-empfnet_TDNS-WIN"
+          },
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-empfnet-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-empfnet_TPSM-PingPR"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-DATAGW-arunSFTP-P"
+          }
+        ],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-empfnet",
+        "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-gcis",
+        "displayName": "ext-p1-gcis",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.31.11.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [
+          {
+            "relationshipType": "provider",
+            "contractRef": "/schemas/62690d672100003b252a5dd8/templates/template-contract01/contracts/ctr-ext-gcis-P"
+          },
+          {
+            "relationshipType": "consumer",
+            "contractRef": "/schemas/62690dd02100003f252a5dda/templates/template-contract02/contracts/ctr-ext-gcis_ITSM-SHM"
+          }
+        ],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-gcis",
+        "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-admcentre",
+        "displayName": "ext-p1-admcentre",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.31.13.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-admcentre",
+        "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-b2bnet",
+        "displayName": "ext-p1-b2bnet",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.31.15.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-b2bnet",
+        "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF",
+        "anpRef": "",
+        "description": ""
+      },
+      {
+        "name": "ext-p1-3rdparty",
+        "displayName": "ext-p1-3rdparty",
+        "extEpgType": "on-premise",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "subnets": [
+          {
+            "ip": "10.31.17.0/24",
+            "scope": ["import-security"],
+            "aggregate": []
+          }
+        ],
+        "selectors": [],
+        "contractRelationships": [],
+        "preferredGroup": false,
+        "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-3rdparty",
+        "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF",
+        "anpRef": "",
+        "description": ""
+      }
+    ],
+    "serviceGraphs": [],
+    "intersiteL3outs": [
+      {
+        "name": "l3o-extfw-eMPF",
+        "displayName": "l3o-p1-extfw-eMPF",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+        "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF",
+        "description": ""
+      },
+      {
+        "name": "l3o-extfw-common",
+        "displayName": "l3o-p1-extfw-common",
+        "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-common",
+        "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-common",
+        "description": ""
+      }
+    ],
+    "templateType": "stretched-template",
+    "templateSubType": [],
+    "networks": [],
+    "description": ""
+  },
+  "sites": [
+    {
+      "siteId": "62612d0f7a71da36ea8d69c2",
+      "templateName": "template-prod1",
+      "anps": [],
+      "vrfs": [],
+      "bds": [],
+      "contracts": [],
+      "externalEpgs": [
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-fabric-default",
+          "l3outDn": "uni/tn-tn-eMPF/out-l3o-extfw-common",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-common"
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-fabric-vrf-common",
+          "l3outDn": "uni/tn-tn-eMPF/out-l3o-extfw-eMPF",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF"
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-3rdparty",
+          "l3outDn": "",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": ""
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-gcis",
+          "l3outDn": "",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": ""
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-empfnet",
+          "l3outDn": "",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": ""
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-b2bnet",
+          "l3outDn": "",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": ""
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-oobmgmt",
+          "l3outDn": "uni/tn-tn-eMPF/out-l3o-extfw-eMPF",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF"
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-admcentre",
+          "l3outDn": "",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": ""
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-tn_mgmt",
+          "l3outDn": "uni/tn-tn-eMPF/out-l3o-extfw-eMPF",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF"
+        },
+        {
+          "externalEpgRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/externalEpgs/ext-p1-edgewan",
+          "l3outDn": "uni/tn-tn-eMPF/out-l3o-extfw-eMPF",
+          "subnets": [],
+          "routeReachabilityInternetType": "internet",
+          "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF"
+        }
+      ],
+      "serviceGraphs": [],
+      "intersiteL3outs": [
+        {
+          "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-eMPF",
+          "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-eMPF",
+          "srLocationProfiles": []
+        },
+        {
+          "l3outRef": "/schemas/6269064b2000002ad9fe361c/templates/template-prod1/l3outs/l3o-extfw-common",
+          "vrfRef": "/schemas/6269064b2000002ad9fe361c/templates/template-stretched/vrfs/vrf-common",
+          "srLocationProfiles": []
+        }
+      ],
+      "networks": []
+    }
+  ]
+}

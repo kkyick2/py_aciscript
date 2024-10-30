@@ -83,8 +83,8 @@ def parse_mso_json(json_obj: list, key: str, **kwargs) -> pd.DataFrame:
     parsed_data = []
     if kwargs:
         # case1 tenant > tenants_id
-        tenants_id = kwargs['tenants_id']
-        for data in json_obj[key][tenants_id]:
+        tenant_id = kwargs['tenants_id']
+        for data in json_obj[key][tenant_id]:
             parsed_data.append(data)
     else:
         for data in json_obj[key]:
@@ -219,7 +219,7 @@ def process_infile(file: str) -> str:
 
         # step 5B: Export to df
         if 'tenants_id' in req_tables[i]:
-            df1 = parse_mso_json(resp.json(), req_tables[i]['key'], tenants_id = req_tables[i]['tenants_id'])
+            df1 = parse_mso_json(resp.json(), req_tables[i]['key'], tenant_id = req_tables[i]['tenants_id'])
             sheetname = f"{req_tables[i]['uri']}_{req_tables[i]['tenants_id']}"
         else:
             df1 = parse_mso_json(resp.json(), req_tables[i]['key'])
