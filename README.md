@@ -36,7 +36,7 @@ options:
    ````
 3. Option2: by input args
    ```
-   python src\pyapicapi.py -i n1_apic_input.json,n2_apic_input.json
+   python src\pyapicapi.py -i n1_apic.json,n2_apic.json,p1_apic.json,p2_apic.json
    ```
 
 ## pyapicanaylsis_contract.py, pyapicanaylsis_interface.py

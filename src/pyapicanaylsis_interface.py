@@ -165,12 +165,12 @@ def process_infile(file: str) -> None:
     # step 3D: Get interface profile
     # infraRsAccBaseGrp ========================================
     df_infraRsAccBaseGrp = pd.read_excel(file, sheet_name='infraRsAccBaseGrp')
-    df_intf_profile = df_infraAccBndlGrp[['dn', 'tCl', 'tDn']]
+    df_intf_profile = df_infraRsAccBaseGrp[['dn', 'tCl', 'tDn']]
     df_intf_profile['dn'] = df_intf_profile['dn'].str.replace(r'/rsaccBaseGrp$', '', regex=True)
     df_intf_profile = df_intf_profile.sort_values(by=['dn'])
 
-    # step 3D: Get port channel / vpc profile
-    # infraRsAccBaseGrp ========================================
+    # step 3E: Get port channel / vpc profile
+    # infraAccBndlGrp ========================================
     df_infraAccBndlGrp = pd.read_excel(file, sheet_name='infraAccBndlGrp')
     df_vpc_profile = df_infraAccBndlGrp[['dn', 'name', 'descr']]
     df_vpc_profile = df_vpc_profile.sort_values(by=['dn'])
