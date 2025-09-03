@@ -127,19 +127,13 @@ def process_infile(file: str) -> None:
                                  'inbMgmtAddr', 'inbMgmtGateway', 'lastRebootTime', 'lastResetReason', 'systemUpTime', 'tepPool', 'address']]  # choose column
     df_topSystem = df_topSystem.sort_values(by=['dn'])
 
-    # step 3B: Get transceiver
-    # ethpmFcot ========================================
-    df_ethpmFcot = pd.read_excel(file, sheet_name='ethpmFcot')
-    df_ethpmFcot = df_ethpmFcot[['dn', 'guiCiscoEID', 'guiName', 'guiSN']]  # choose column
-    df_ethpmFcot['dn'] = df_ethpmFcot['dn'].str.replace(r'/phys/fcot$', '', regex=True)
-
-    # step 3C: Get interface l1PhysIf
+    # step 3B: Get interface l1PhysIf
     # l1PhysIf ========================================
     df_l1PhysIf = pd.read_excel(file, sheet_name='l1PhysIf')
     df_l1PhysIf = df_l1PhysIf[['dn', 'id', 'descr', 'portT', 'mode', 'layer', 'usage', 'adminSt', 'autoNeg']]  # choose column
     df_l1PhysIf = df_l1PhysIf.sort_values(by=['dn'])
 
-    # step 3C: Get interface ethpmPhysIf
+    # step 3B: Get interface ethpmPhysIf
     # ethpmPhysIf ========================================
     df_ethpmPhysIf = pd.read_excel(file, sheet_name='ethpmPhysIf')
     df_ethpmPhysIf = df_ethpmPhysIf[['dn', 'operSpeed', 'operDuplex','operSt', 'operStQual', 'bundleIndex', 'operVlans']]  # choose column
@@ -147,19 +141,10 @@ def process_infile(file: str) -> None:
     df_ethpmPhysIf = df_ethpmPhysIf.sort_values(by=['dn'])
     
     # merge
-    # df_interface = df_interface[['dn', 'id', 'descr', 'portT', 'mode', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'bundleIndex', 'operVlans']]
     df_interface =  pd.merge(df_l1PhysIf, df_ethpmPhysIf, on="dn", how="left")
-    # _nodeid, dn = topology/pod-1/node-1101/sys/phys-[eth1/10] -> 1101
-    df_interface['_nodeid'] = df_interface['dn'].str.replace(r'.*node-(\d+).*', r'\1', regex=True)
-    # _intf, id = eth1/10 -> eth1/10
-    df_interface['_intf'] = df_interface['id']
-    # _intf_p, dn = topology/pod-1/node-1101/sys/phys-[eth1/10] -> p10
-    df_interface['_intf_p'] = df_interface['dn'].str.replace(r'.*\[eth1\/(\d+)\].*', 'p'+ r'\1', regex=True)
-    # _intf_n, _intf_p = p10 -> 10
-    df_interface['_intf_n'] = df_interface['_intf_p'].str.replace(r'p(\d+(?:-\d+)?)', r'\1', regex=True)
-    df_interface = df_interface[['dn','_nodeid' ,'_intf','_intf_p','_intf_n', 'descr', 'portT', 'mode', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'bundleIndex', 'operVlans']]
+    df_interface = df_interface[['dn', 'id', 'descr', 'portT', 'mode', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'bundleIndex', 'operVlans']]
 
-    # step 3D,3E: Get interface epg, encap-vlan
+    # step 3C: Get interface epg, encap-vlan
     # fvRsPathAtt ========================================
     df_fvRsPathAtt = pd.read_excel(file, sheet_name='fvRsPathAtt')
     df_fvRsPathAtt = df_fvRsPathAtt[['dn', 'encap', 'tDn']]  # choose column
@@ -177,26 +162,14 @@ def process_infile(file: str) -> None:
     df_intf_encap = df_intf_encap.groupby('tDn')['encap'].agg(lambda col: ','.join(col.unique())).reset_index()    # group
     df_intf_encap = df_intf_encap.sort_values(by=['tDn'])
 
-    # step 3F: Get interface profile
+    # step 3D: Get interface profile
     # infraRsAccBaseGrp ========================================
     df_infraRsAccBaseGrp = pd.read_excel(file, sheet_name='infraRsAccBaseGrp')
-    df_intf_profile = df_infraRsAccBaseGrp[['dn', 'tCl', 'tDn']] # choose column
+    df_intf_profile = df_infraRsAccBaseGrp[['dn', 'tCl', 'tDn']]
     df_intf_profile['dn'] = df_intf_profile['dn'].str.replace(r'/rsaccBaseGrp$', '', regex=True)
-    # _nodeid, dn = uni/infra/accportprof-lif-1101-1102/hports-p48-typ-range -> 1101-1102
-    df_intf_profile['_nodeid'] = df_intf_profile['dn'].str.replace(r'.*accportprof-lif-(\d+(?:-\d+)?)\/hports.*', r'\1', regex=True)
-    # _intf_p, dn = uni/infra/accportprof-lif-1101-1102/hports-p48-typ-range -> p48
-    # _intf_p, dn = uni/infra/accportprof-lif-1104/hports-p1-p2-typ-range -> p1-p2
-    # _intf_p, dn = uni/infra/accportprof-lif-1201/hports-p16-17-typ-range -> p16-17
-    df_intf_profile['_intf_p'] = df_intf_profile['dn'].str.replace(r'.*\/hports-(p\d+(?:-\w+)?)-typ-range.*', r'\1', regex=True)
-    # _intf_n, _intf_p = p10 -> 10
-    df_intf_profile['_intf_n'] = df_intf_profile['_intf_p'].str.replace(r'p(\d+(?:-\d+)?)', r'\1', regex=True)
-    # _policyGrp, tDn = uni/infra/funcprof/accbundle-vpc-leaf1101-1102-p44 -> vpc-leaf1101-1102-p44
-    # _policyGrp, tDn = uni/infra/funcprof/accportgrp-ipg-vm -> ipg-vm
-    df_intf_profile['_policyGrp'] = df_intf_profile['tDn'].str.replace(r'uni\/infra\/funcprof\/(?:accportgrp-|accbundle-)(.*)$', r'\1', regex=True)
     df_intf_profile = df_intf_profile.sort_values(by=['dn'])
-    df_intf_profile = df_intf_profile[['dn', '_nodeid','_intf_p', '_intf_n', '_policyGrp']]
 
-    # step 3G: Get port channel / vpc profile
+    # step 3E: Get port channel / vpc profile
     # infraAccBndlGrp ========================================
     df_infraAccBndlGrp = pd.read_excel(file, sheet_name='infraAccBndlGrp')
     df_vpc_profile = df_infraAccBndlGrp[['dn', 'name', 'descr']]
@@ -208,7 +181,6 @@ def process_infile(file: str) -> None:
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
     tshoot = 0
     export_df_to_xlsx(writer, df_topSystem, 'topSystem')
-    export_df_to_xlsx(writer, df_ethpmFcot, 'transceiver')
     export_df_to_xlsx(writer, df_interface, 'interface')
     export_df_to_xlsx(writer, df_epg_encap, 'epg_encap')
     export_df_to_xlsx(writer, df_intf_encap, 'intf_encap')
