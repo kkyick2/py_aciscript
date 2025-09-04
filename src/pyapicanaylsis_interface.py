@@ -125,30 +125,33 @@ def process_infile(file: str) -> None:
     df_topSystem = pd.read_excel(file, sheet_name='topSystem')
     df_topSystem = df_topSystem[['dn', 'name', 'id', 'fabricId', 'podId', 'role', 'serial', 'state', 'version', 'oobMgmtAddr',
                                  'inbMgmtAddr', 'inbMgmtGateway', 'lastRebootTime', 'lastResetReason', 'systemUpTime', 'tepPool', 'address']]  # choose column
-    df_topSystem = df_topSystem.sort_values(by=['dn'])
+    df_topSystem = df_topSystem.sort_values(by=['id'])
 
-    # step 3B: Get transceiver
+    # step 3C: Get transceiver sfp_sn
     # ethpmFcot ========================================
     df_ethpmFcot = pd.read_excel(file, sheet_name='ethpmFcot')
     df_ethpmFcot = df_ethpmFcot[['dn', 'guiCiscoEID', 'guiName', 'guiSN']]  # choose column
     df_ethpmFcot['dn'] = df_ethpmFcot['dn'].str.replace(r'/phys/fcot$', '', regex=True)
 
-    # step 3C: Get interface l1PhysIf
+    # step 3B: Get interface l1PhysIf
     # l1PhysIf ========================================
     df_l1PhysIf = pd.read_excel(file, sheet_name='l1PhysIf')
     df_l1PhysIf = df_l1PhysIf[['dn', 'id', 'descr', 'portT', 'mode', 'layer', 'usage', 'adminSt', 'autoNeg']]  # choose column
     df_l1PhysIf = df_l1PhysIf.sort_values(by=['dn'])
 
-    # step 3C: Get interface ethpmPhysIf
+    # step 3B: Get interface ethpmPhysIf
     # ethpmPhysIf ========================================
     df_ethpmPhysIf = pd.read_excel(file, sheet_name='ethpmPhysIf')
-    df_ethpmPhysIf = df_ethpmPhysIf[['dn', 'operSpeed', 'operDuplex','operSt', 'operStQual', 'bundleIndex', 'operVlans']]  # choose column
+    df_ethpmPhysIf = df_ethpmPhysIf[['dn','lastLinkStChg','nativeVlan', 'operSpeed', 'operDuplex','operSt', 'operStQual', 'bundleIndex', 'operVlans']]  # choose column
     df_ethpmPhysIf['dn'] = df_ethpmPhysIf['dn'].str.replace(r'/phys$', '', regex=True)
     df_ethpmPhysIf = df_ethpmPhysIf.sort_values(by=['dn'])
     
-    # merge
-    # df_interface = df_interface[['dn', 'id', 'descr', 'portT', 'mode', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'bundleIndex', 'operVlans']]
+    # merge (df_l1PhysIf <- df_ethpmPhysIf)
     df_interface =  pd.merge(df_l1PhysIf, df_ethpmPhysIf, on="dn", how="left")
+    # merge (df_interface <- df_ethpmFcot)
+    df_interface =  pd.merge(df_interface, df_ethpmFcot, on="dn", how="left")
+
+    # column index update
     # _nodeid, dn = topology/pod-1/node-1101/sys/phys-[eth1/10] -> 1101
     df_interface['_nodeid'] = df_interface['dn'].str.replace(r'.*node-(\d+).*', r'\1', regex=True)
     # _intf, id = eth1/10 -> eth1/10
@@ -157,27 +160,35 @@ def process_infile(file: str) -> None:
     df_interface['_intf_p'] = df_interface['dn'].str.replace(r'.*\[eth1\/(\d+)\].*', 'p'+ r'\1', regex=True)
     # _intf_n, _intf_p = p10 -> 10
     df_interface['_intf_n'] = df_interface['_intf_p'].str.replace(r'p(\d+(?:-\d+)?)', r'\1', regex=True)
-    df_interface = df_interface[['dn','_nodeid' ,'_intf','_intf_p','_intf_n', 'descr', 'portT', 'mode', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'bundleIndex', 'operVlans']]
+    df_interface = df_interface[['dn','_nodeid' ,'_intf','_intf_p','_intf_n', 'descr', 'portT', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'guiCiscoEID', 'bundleIndex', 'operVlans', 'nativeVlan', 'lastLinkStChg']] # choose column
 
-    # step 3D,3E: Get interface epg, encap-vlan
+    # step 3D,3E,3F: Get encp-all, epg-encp, intf-encp, 
     # fvRsPathAtt ========================================
     df_fvRsPathAtt = pd.read_excel(file, sheet_name='fvRsPathAtt')
-    df_fvRsPathAtt = df_fvRsPathAtt[['dn', 'encap', 'tDn']]  # choose column
+    df_fvRsPathAtt = df_fvRsPathAtt[['dn', 'encap', 'instrImedcy' ,'mode' ,'tDn']]  # choose column
     df_fvRsPathAtt['dn'] = df_fvRsPathAtt['dn'].str.replace(r'/rspathAtt-\[topology/(.*)\]\]$', '', regex=True)
     df_fvRsPathAtt['encap'] = df_fvRsPathAtt['encap'].str.replace(r'^vlan-', '', regex=True)
-
+    # For output [all, encap]
+    df_all_encap = df_fvRsPathAtt[['dn', 'encap', 'instrImedcy' ,'mode' ,'tDn']] # choose column
+    
     # For output [epg, encap]
-    df_epg_encap = df_fvRsPathAtt[['dn', 'encap']]
+    df_epg_encap = df_fvRsPathAtt[['dn','encap']]
     df_epg_encap = df_epg_encap.sort_values(by=['encap'])
     df_epg_encap = df_epg_encap.groupby('dn')['encap'].agg(lambda col: ','.join(col.unique())).reset_index()    # group
 
     # For output [intf, encap]
-    df_intf_encap = df_fvRsPathAtt[['tDn', 'encap']]
+    df_intf_encap = df_fvRsPathAtt[['tDn','encap']]
     df_intf_encap = df_intf_encap.sort_values(by=['encap'])
     df_intf_encap = df_intf_encap.groupby('tDn')['encap'].agg(lambda col: ','.join(col.unique())).reset_index()    # group
     df_intf_encap = df_intf_encap.sort_values(by=['tDn'])
 
-    # step 3F: Get interface profile
+    # step 3G: Get leaf vlan_encap
+    # vlanCktEp ========================================
+    df_vlanCktEp = pd.read_excel(file, sheet_name='vlanCktEp')
+    df_vlanCktEp = df_vlanCktEp[['ctrl','dn', 'encap', 'epgDn' ,'fabEncap' ,'id', 'pcTag']]  # choose column
+    df_leaf_vlan_encap = df_vlanCktEp[['dn','epgDn' ,'ctrl','encap','fabEncap','id','pcTag']]  # choose column
+
+    # step 3H: Get interface profile
     # infraRsAccBaseGrp ========================================
     df_infraRsAccBaseGrp = pd.read_excel(file, sheet_name='infraRsAccBaseGrp')
     df_intf_profile = df_infraRsAccBaseGrp[['dn', 'tCl', 'tDn']] # choose column
@@ -196,7 +207,7 @@ def process_infile(file: str) -> None:
     df_intf_profile = df_intf_profile.sort_values(by=['dn'])
     df_intf_profile = df_intf_profile[['dn', '_nodeid','_intf_p', '_intf_n', '_policyGrp']]
 
-    # step 3G: Get port channel / vpc profile
+    # step 3I: Get port channel / vpc profile
     # infraAccBndlGrp ========================================
     df_infraAccBndlGrp = pd.read_excel(file, sheet_name='infraAccBndlGrp')
     df_vpc_profile = df_infraAccBndlGrp[['dn', 'name', 'descr']]
@@ -208,10 +219,12 @@ def process_infile(file: str) -> None:
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
     tshoot = 0
     export_df_to_xlsx(writer, df_topSystem, 'topSystem')
-    export_df_to_xlsx(writer, df_ethpmFcot, 'transceiver')
     export_df_to_xlsx(writer, df_interface, 'interface')
+    export_df_to_xlsx(writer, df_ethpmFcot, 'sfp_sn')
+    export_df_to_xlsx(writer, df_all_encap, 'all_encap')
     export_df_to_xlsx(writer, df_epg_encap, 'epg_encap')
     export_df_to_xlsx(writer, df_intf_encap, 'intf_encap')
+    export_df_to_xlsx(writer, df_leaf_vlan_encap, 'leaf_encap')
     export_df_to_xlsx(writer, df_intf_profile, 'intf_prof')
     export_df_to_xlsx(writer, df_vpc_profile, 'vpc_prof')
     if tshoot == 1:
