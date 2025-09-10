@@ -116,6 +116,59 @@ def process_input(args) -> list:
 
     return infilelist
 
+def df_intf_profile_split_row(row):
+    # example:
+    # Raw
+    # dn	_nodeid	_intf_p	_intf_n	_policyGrp
+    # uni/infra/accportprof-lif-1101/hports-p31-typ-range	1101	p31	31	ipg-vm
+    # uni/infra/accportprof-lif-1101/hports-p32-typ-range	1101	p32	32	ipg-vm
+    # uni/infra/accportprof-lif-1103-1104/hports-p3-typ-range	1103-1104	p3	3	vpc-leaf1103-1104-p3
+    # uni/infra/accportprof-lif-1103/hports-p1-p2-typ-range	1103	p1-p2	1-2	ipg-inb
+    # uni/infra/accportprof-lif-1201/hports-p16-17-typ-range	1201	p16-17	16-17	ipg-phy
+    # Result
+    # dn	_nodeid	_intf_p	_intf_n	_policyGrp
+    # uni/infra/accportprof-lif-1101/hports-p31-typ-range	1101	p31	31	ipg-vm
+    # uni/infra/accportprof-lif-1101/hports-p32-typ-range	1101	p32	32	ipg-vm
+    # uni/infra/accportprof-lif-1103-1104/hports-p3-typ-range	1103	p3	3	vpc-leaf1103-1104-p3
+    # uni/infra/accportprof-lif-1103-1104/hports-p3-typ-range	1104	p3	3	vpc-leaf1103-1104-p3
+    # uni/infra/accportprof-lif-1103/hports-p1-p2-typ-range	1103	p1	1	ipg-inb
+    # uni/infra/accportprof-lif-1103/hports-p1-p2-typ-range	1103	p2	2	ipg-inb
+    # uni/infra/accportprof-lif-1201/hports-p16-17-typ-range	1201	p16	16	ipg-phy
+    # uni/infra/accportprof-lif-1201/hports-p16-17-typ-range	1201	p17	17	ipg-phy
+
+    # Handle nodeid ranges (e.g., '1103-1104')
+    nodeids = []
+    if '-' in row['_nodeid']:
+        start, end = row['_nodeid'].split('-')
+        nodeids = [str(i) for i in range(int(start), int(end) + 1)]
+    else:
+        nodeids = [row['_nodeid']]
+
+    # Handle interface ranges (e.g., 'p1-p2' or 'p16-17')
+    intf_ps = []
+    intf_ns = []
+    if '-' in row['_intf_p']:
+        prefix = row['_intf_p'][0]  # 'p' or other prefix
+        start, end = map(int, row['_intf_n'].split('-'))
+        intf_ps = [f"{prefix}{i}" for i in range(start, end + 1)]
+        intf_ns = [str(i) for i in range(start, end + 1)]
+    else:
+        intf_ps = [row['_intf_p']]
+        intf_ns = [row['_intf_n']]
+
+    # Create rows for each combination of nodeid and interface
+    result = []
+    for nodeid in nodeids:
+        for intf_p, intf_n in zip(intf_ps, intf_ns):
+            result.append({
+                'dn': row['dn'],
+                '_nodeid': nodeid,
+                '_intf_p': intf_p,
+                '_intf_n': intf_n,
+                '_policyGrp': row['_policyGrp']
+            })
+    return result
+
 def process_infile(file: str) -> None:
     # step 3: column operation
     # ===========================================================================
@@ -192,26 +245,46 @@ def process_infile(file: str) -> None:
     # infraRsAccBaseGrp ========================================
     df_infraRsAccBaseGrp = pd.read_excel(file, sheet_name='infraRsAccBaseGrp')
     df_intf_profile = df_infraRsAccBaseGrp[['dn', 'tCl', 'tDn']] # choose column
-    df_intf_profile['dn'] = df_intf_profile['dn'].str.replace(r'/rsaccBaseGrp$', '', regex=True)
+    # Always create an explicit .copy() when you intend to work on a subset of a DataFrame independently.
+    df_intf_profile = df_intf_profile.copy()
+    df_intf_profile.loc[:, 'dn'] = df_intf_profile['dn'].str.replace(r'/rsaccBaseGrp$', '', regex=True)
     # _nodeid, dn = uni/infra/accportprof-lif-1101-1102/hports-p48-typ-range -> 1101-1102
-    df_intf_profile['_nodeid'] = df_intf_profile['dn'].str.replace(r'.*accportprof-lif-(\d+(?:-\d+)?)\/hports.*', r'\1', regex=True)
+    df_intf_profile.loc[:, '_nodeid'] = df_intf_profile['dn'].str.replace(r'.*accportprof-lif-(\d+(?:-\d+)?)\/hports.*', r'\1', regex=True)
     # _intf_p, dn = uni/infra/accportprof-lif-1101-1102/hports-p48-typ-range -> p48
     # _intf_p, dn = uni/infra/accportprof-lif-1104/hports-p1-p2-typ-range -> p1-p2
     # _intf_p, dn = uni/infra/accportprof-lif-1201/hports-p16-17-typ-range -> p16-17
-    df_intf_profile['_intf_p'] = df_intf_profile['dn'].str.replace(r'.*\/hports-(p\d+(?:-\w+)?)-typ-range.*', r'\1', regex=True)
+    df_intf_profile.loc[:, '_intf_p'] = df_intf_profile['dn'].str.replace(r'.*\/hports-(p\d+(?:-\w+)?)-typ-range.*', r'\1', regex=True)
     # _intf_n, _intf_p = p10 -> 10
-    df_intf_profile['_intf_n'] = df_intf_profile['_intf_p'].str.replace(r'p(\d+(?:-\d+)?)', r'\1', regex=True)
+    df_intf_profile.loc[:, '_intf_n'] = df_intf_profile['_intf_p'].str.replace(r'p(\d+(?:-\d+)?)', r'\1', regex=True)
     # _policyGrp, tDn = uni/infra/funcprof/accbundle-vpc-leaf1101-1102-p44 -> vpc-leaf1101-1102-p44
     # _policyGrp, tDn = uni/infra/funcprof/accportgrp-ipg-vm -> ipg-vm
-    df_intf_profile['_policyGrp'] = df_intf_profile['tDn'].str.replace(r'uni\/infra\/funcprof\/(?:accportgrp-|accbundle-)(.*)$', r'\1', regex=True)
+    df_intf_profile.loc[:, '_policyGrp'] = df_intf_profile['tDn'].str.replace(r'uni\/infra\/funcprof\/(?:accportgrp-|accbundle-)(.*)$', r'\1', regex=True)
     df_intf_profile = df_intf_profile.sort_values(by=['dn'])
     df_intf_profile = df_intf_profile[['dn', '_nodeid','_intf_p', '_intf_n', '_policyGrp']]
+
+    # step 3H part2: df_intf_profile split row
+    # ========================================
+    # Apply the function and create new DataFrame
+    expanded_rows = []
+    for _, row in df_intf_profile.iterrows():
+        expanded_rows.extend(df_intf_profile_split_row(row))
+    # Create final DataFrame
+    df_intf_profile_split = pd.DataFrame(expanded_rows)
+    # Sort by _nodeid and _intf_n for consistency
+    df_intf_profile_split = df_intf_profile_split.sort_values(['_nodeid', '_intf_n']).reset_index(drop=True)
+
 
     # step 3I: Get port channel / vpc profile
     # infraAccBndlGrp ========================================
     df_infraAccBndlGrp = pd.read_excel(file, sheet_name='infraAccBndlGrp')
     df_vpc_profile = df_infraAccBndlGrp[['dn', 'name', 'descr']]
     df_vpc_profile = df_vpc_profile.sort_values(by=['dn'])
+
+    # merge to interface (df_interface <- df_intf_profile_split)
+    # ========================================
+    df_interface =  pd.merge(df_interface, df_intf_profile_split, on=['_nodeid','_intf_p'] , how="left")
+    df_interface = df_interface[['dn_x','_nodeid' ,'_intf','_intf_p','_intf_n_x', 'descr', 'portT', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'guiCiscoEID', 'bundleIndex', 'operVlans', 'nativeVlan', '_policyGrp', 'lastLinkStChg']] # choose column
+    df_interface = df_interface.rename(columns={'dn_x': 'dn', '_intf_n_x': '_intf_n'})
 
     # step 99: export result to xlsx apic_n1_xxxx_20241016_1335.xlsx
     outfile_env = file.split("_")[1]
@@ -225,12 +298,14 @@ def process_infile(file: str) -> None:
     export_df_to_xlsx(writer, df_epg_encap, 'epg_encap')
     export_df_to_xlsx(writer, df_intf_encap, 'intf_encap')
     export_df_to_xlsx(writer, df_leaf_vlan_encap, 'leaf_encap')
-    export_df_to_xlsx(writer, df_intf_profile, 'intf_prof')
-    export_df_to_xlsx(writer, df_vpc_profile, 'vpc_prof')
+    export_df_to_xlsx(writer, df_intf_profile_split, 'intf_prof_split')
+    
     if tshoot == 1:
         export_df_to_xlsx(writer, df_l1PhysIf, 'l1PhysIf')
         export_df_to_xlsx(writer, df_ethpmPhysIf, 'ethpmPhysIf')
         export_df_to_xlsx(writer, df_fvRsPathAtt, 'fvRsPathAtt')
+        export_df_to_xlsx(writer, df_intf_profile, 'intf_prof')
+        export_df_to_xlsx(writer, df_vpc_profile, 'vpc_prof')
 
     logger.info(f'###')
     logger.info(f'###')

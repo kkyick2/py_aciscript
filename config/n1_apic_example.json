@@ -374,6 +374,38 @@
       ]
     },
     {
+      "name": "Loading epg vlan and encap",
+      "key": "vlanCktEp",
+      "alias": "EPF_vlan",
+      "remove_properties": [
+        "allowUsegUnsupported",
+        "childAction",
+        "enfPref",
+        "epUpSeqNum",
+        "excessiveTcnFlushCnt",
+        "floodInEncapUnsupported",
+        "fwdCtrl",
+        "hwId",
+        "lcOwn",
+        "modTs",
+        "mode",
+        "monPolDn",
+        "operSt",
+        "operStQual",
+        "operState",
+        "proxyArpUnsupported",
+        "qosPrio",
+        "qosmCfgFailedBmp",
+        "qosmCfgFailedTs",
+        "qosmCfgState",
+        "type",
+        "vlanmgrCfgFailedBmp",
+        "vlanmgrCfgFailedTs",
+        "vlanmgrCfgState",
+        "vlanmgrCustFaultBmp"
+      ]
+    },
+    {
       "name": "Loading Client Endpoint Detail",
       "key": "fvCEp",
       "alias": "Client_Endpoint",
@@ -796,6 +828,26 @@
         "vSrc",
         "vendor",
         "volt"
+      ]
+    },
+    {
+      "name": "Loading l4l7 service",
+      "key": "vnsRsCIfPathAtt",
+      "alias": "l4l7",
+      "remove_properties": [
+        "annotation",
+        "childAction",
+        "extMngdBy",
+        "lcOwn",
+        "modTs",
+        "monPolDn",
+        "rType",
+        "state",
+        "stateQual",
+        "status",
+        "tType",
+        "uid",
+        "userdom"
       ]
     }
   ]
