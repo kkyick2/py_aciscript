@@ -212,7 +212,7 @@ def process_infile(file: str) -> None:
     # _intf_p, dn = topology/pod-1/node-1101/sys/phys-[eth1/10] -> p10
     df_interface['_intf_p'] = df_interface['dn'].str.replace(r'.*\[eth1\/(\d+)\].*', 'p'+ r'\1', regex=True)
     # _intf_n, _intf_p = p10 -> 10
-    df_interface['_intf_n'] = df_interface['_intf_p'].str.replace(r'p(\d+(?:-\d+)?)', r'\1', regex=True)
+    df_interface['_intf_n'] = df_interface['_intf_p'].str.replace(r'[pP](\d+(?:-\d+)?)', r'\1', regex=True)
     df_interface = df_interface[['dn','_nodeid' ,'_intf','_intf_p','_intf_n', 'descr', 'portT', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'guiCiscoEID', 'bundleIndex', 'operVlans', 'nativeVlan', 'lastLinkStChg']] # choose column
 
     # step 3D,3E,3F: Get encp-all, epg-encp, intf-encp, 
@@ -253,9 +253,9 @@ def process_infile(file: str) -> None:
     # _intf_p, dn = uni/infra/accportprof-lif-1101-1102/hports-p48-typ-range -> p48
     # _intf_p, dn = uni/infra/accportprof-lif-1104/hports-p1-p2-typ-range -> p1-p2
     # _intf_p, dn = uni/infra/accportprof-lif-1201/hports-p16-17-typ-range -> p16-17
-    df_intf_profile.loc[:, '_intf_p'] = df_intf_profile['dn'].str.replace(r'.*\/hports-(p\d+(?:-\w+)?)-typ-range.*', r'\1', regex=True)
+    df_intf_profile.loc[:, '_intf_p'] = df_intf_profile['dn'].str.replace(r'.*\/hports-([pP]\d+(?:-\w+)?)-typ-range.*', r'\1', regex=True)
     # _intf_n, _intf_p = p10 -> 10
-    df_intf_profile.loc[:, '_intf_n'] = df_intf_profile['_intf_p'].str.replace(r'p(\d+(?:-\d+)?)', r'\1', regex=True)
+    df_intf_profile.loc[:, '_intf_n'] = df_intf_profile['_intf_p'].str.replace(r'[pP](\d+(?:-\d+)?)', r'\1', regex=True)
     # _policyGrp, tDn = uni/infra/funcprof/accbundle-vpc-leaf1101-1102-p44 -> vpc-leaf1101-1102-p44
     # _policyGrp, tDn = uni/infra/funcprof/accportgrp-ipg-vm -> ipg-vm
     df_intf_profile.loc[:, '_policyGrp'] = df_intf_profile['tDn'].str.replace(r'uni\/infra\/funcprof\/(?:accportgrp-|accbundle-)(.*)$', r'\1', regex=True)
