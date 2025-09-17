@@ -180,6 +180,25 @@ def process_infile(file: str) -> None:
                                  'inbMgmtAddr', 'inbMgmtGateway', 'lastRebootTime', 'lastResetReason', 'systemUpTime', 'tepPool', 'address']]  # choose column
     df_topSystem = df_topSystem.sort_values(by=['id'])
 
+    # step 3X: Get Interface Input Counters
+    # rmonIfIn ========================================
+    df_rmonIfIn = pd.read_excel(file, sheet_name='rmonIfIn')
+    df_rmonIfIn = df_rmonIfIn[['dn', 'discards', 'errors']]  # choose column
+    df_rmonIfIn = df_rmonIfIn.rename(columns={'discards': '_inDiscards', 'errors': '_inErrors'})
+    df_rmonIfIn['dn'] = df_rmonIfIn['dn'].str.replace(r'/dbgIfIn$', '', regex=True)
+
+    # step 3Y: Get Interface Output Counters
+    # rmonIfOut ========================================
+    df_rmonIfOut = pd.read_excel(file, sheet_name='rmonIfOut')
+    df_rmonIfOut = df_rmonIfOut[['dn', 'discards', 'errors']]  # choose column
+    df_rmonIfOut = df_rmonIfOut.rename(columns={'discards': '_outDiscards', 'errors': '_outErrors'})
+    df_rmonIfOut['dn'] = df_rmonIfOut['dn'].str.replace(r'/dbgIfOut$', '', regex=True)
+
+    # merge (df_rmonIfIn <- df_rmonIfOut)
+    df_interfaceError =  pd.merge(df_rmonIfIn, df_rmonIfOut, on="dn", how="left")
+    # Add '_haveError' column: True if any of the error/discard columns > 0, else False
+    df_interfaceError['_haveError'] = (df_interfaceError['_inDiscards'] > 0) | (df_interfaceError['_inErrors'] > 0) | (df_interfaceError['_outDiscards'] > 0) | (df_interfaceError['_outErrors'] > 0)
+
     # step 3C: Get transceiver sfp_sn
     # ethpmFcot ========================================
     df_ethpmFcot = pd.read_excel(file, sheet_name='ethpmFcot')
@@ -293,16 +312,20 @@ def process_infile(file: str) -> None:
     tshoot = 0
     export_df_to_xlsx(writer, df_topSystem, 'topSystem')
     export_df_to_xlsx(writer, df_interface, 'interface')
+    export_df_to_xlsx(writer, df_interfaceError, 'intf_error')
     export_df_to_xlsx(writer, df_ethpmFcot, 'sfp_sn')
     export_df_to_xlsx(writer, df_all_encap, 'all_encap')
     export_df_to_xlsx(writer, df_epg_encap, 'epg_encap')
     export_df_to_xlsx(writer, df_intf_encap, 'intf_encap')
     export_df_to_xlsx(writer, df_leaf_vlan_encap, 'leaf_encap')
     export_df_to_xlsx(writer, df_intf_profile_split, 'intf_prof_split')
+
     
     if tshoot == 1:
         export_df_to_xlsx(writer, df_l1PhysIf, 'l1PhysIf')
         export_df_to_xlsx(writer, df_ethpmPhysIf, 'ethpmPhysIf')
+        export_df_to_xlsx(writer, df_rmonIfIn, 'df_rmonIfIn')
+        export_df_to_xlsx(writer, df_rmonIfOut, 'df_rmonIfOut')
         export_df_to_xlsx(writer, df_fvRsPathAtt, 'fvRsPathAtt')
         export_df_to_xlsx(writer, df_intf_profile, 'intf_prof')
         export_df_to_xlsx(writer, df_vpc_profile, 'vpc_prof')

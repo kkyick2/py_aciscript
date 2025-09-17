@@ -618,6 +618,40 @@
       ]
     },
     {
+      "name": "Loading Interface Input Counters",
+      "key": "rmonIfIn",
+      "alias": "InterfaceInputCounters",
+      "remove_properties": [
+        "broadcastPkts",
+        "childAction",
+        "clearTs",
+        "modTs",
+        "multicastPkts",
+        "nUcastPkts",
+        "octets",
+        "status",
+        "ucastPkts",
+        "unknownProtos"
+      ]
+    },
+    {
+      "name": "Loading Interface Output Counters",
+      "key": "rmonIfOut",
+      "alias": "InterfaceOutputCounters",
+      "remove_properties": [
+        "broadcastPkts",
+        "childAction",
+        "clearTs",
+        "modTs",
+        "multicastPkts",
+        "nUcastPkts",
+        "octets",
+        "qLen",
+        "status",
+        "ucastPkts"
+      ]
+    },
+    {
       "name": "Loading LLDP Adj Endpoint Detail",
       "key": "lldpAdjEp",
       "alias": "LLDP_Adj",
