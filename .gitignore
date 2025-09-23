@@ -1,6 +1,7 @@
 # user define
 config/*.txt
 config/*apic.json
+config/*5ltm[0-9][0-9][0-9][0-9].json
 config/*mso.json
 *.xlsx
 
