@@ -1,0 +1,44 @@
+{
+  "remove_properties_flag": 1,
+  "tables": [
+    {
+      "name": "Loading virtual",
+      "key": "virtual",
+      "alias": "virtual",
+      "remove_properties": [
+        "kind",
+        "partition",
+        "fullPath",
+        "generation",
+        "selfLink",
+        "addressStatus",
+        "autoLasthop",
+        "cmpEnabled",
+        "connectionLimit",
+        "evictionProtected",
+        "gtmScore",
+        "ipProtocol",
+        "mask",
+        "mirror",
+        "mobileAppTunnel",
+        "nat64",
+        "rateLimit",
+        "rateLimitDstMask",
+        "rateLimitMode",
+        "rateLimitSrcMask",
+        "serversslUseSni",
+        "serviceDownImmediateAction",
+        "source",
+        "sourcePort",
+        "synCookieStatus",
+        "translateAddress",
+        "translatePort",
+        "vlansDisabled",
+        "fallbackPersistenceReference",
+        "poolReference",
+        "policiesReference",
+        "profilesReference"
+      ]
+    }
+  ]
+}

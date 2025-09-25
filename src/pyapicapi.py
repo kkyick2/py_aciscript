@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 import pyapicanaylsis_interface
 import pyapicanaylsis_contract
-PARENT_DIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ), os.pardir))
+PARENT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 DATETIME = datetime.now().strftime("%Y%m%d_%H%M%S")
 LOG_ENV = 'dev'
 LOG_DIR = 'log'
@@ -72,11 +72,6 @@ def get_apic_api_resp(ip: str, key: str, token: str) -> requests.Response:
     return resp
 
 def parse_apic_json(json_obj: list, key: str) -> pd.DataFrame:
-    # parse apic json to dataframe
-    #               lv1        lv2(key)       lv3
-    # json_obj = {'imdata': [{'fabricPod': {'attributes': {'childAction ...  || <class 'dict'>
-    # data_list = json_obj[imdata] = {'fabricPod': {'attributes': {'childAction ...}, <class 'list'>
-    #                                {'fabricPod': {'attributes': {'childAction ...},
     parsed_data = []
     for data in json_obj['imdata']:
         parsed_data.append(data[key]['attributes'])
@@ -86,7 +81,8 @@ def parse_apic_json(json_obj: list, key: str) -> pd.DataFrame:
 
 def remove_columns(df: pd.DataFrame, properties: list) -> pd.DataFrame:
     for i in properties:
-        df.pop(i)
+        if i in df.columns:  # Check if column exists before removing
+            df.pop(i)
     logger.info(f' Removed properties size: {df.shape}')
     return df
 
@@ -99,7 +95,7 @@ def get_config_files_to_list(dir: str) -> list:
     matched_files = []
     files = os.listdir(dir)
     for f in files:
-        m = re.search("(.*)apic.json",f)
+        m = re.search("(.*)apic.*\.json", f)
         if m:
             matched_files.append(f)
     return matched_files
@@ -109,45 +105,57 @@ def prompt_select_file(files: list) -> str:
         logger.info(f' 0) {files[0]}')
         selected_file = files[0]
     else:
-        for i in range (len(files)):
+        for i in range(len(files)):
             logger.info(f' {str(i)}) {files[i]}')
-        print ("---------------------------------------------\n")
+        print("---------------------------------------------\n")
         x = int(input("Pick input file from the list above: "))
-        print ("\n---------------------------------------------")
+        print("\n---------------------------------------------")
         selected_file = files[x]
     logger.info(f' Selected file: {selected_file}')
     return selected_file 
 
 def read_config_json(in_file: str) -> list:
     '''
-        config json file format:
+        config json file format (all_apic_example.json):
         {
-            "login": {
-                "username": "admin",
-                "password": "passw0rd",
-                "environment": "np1",
-                "ip": "10.1.1.1:443",
-                "remove_properties_flag": 1
-            },
+            "devices": [
+                {
+                    "environment": "n1",
+                    "ip": "172.31.1.1:443",
+                    "username": "admin",
+                    "password": "pass",
+                    "tables": "apic_tables.json"
+                },
+                ...
+            ]
+        }
+        tables json file format (apic_tables.json):
+        {
+            "remove_properties_flag": 1,
             "tables": [
                 {
-                "name": "Loading APIC Topology",
-                "key": "topSystem",
-                "alias": "Topology",
-                "remove_properties": [
-                    "oobMgmtGateway",
-                    "configIssues",
-                    }
+                    "name": "Loading APIC Topology",
+                    "key": "topSystem",
+                    "alias": "Topology",
+                    "remove_properties": [
+                        "oobMgmtGateway",
+                        "configIssues"
+                    ]
                 }
             ]
         }
     '''
     
-    with open(in_file,'r') as f:
+    with open(in_file, 'r') as f:
         config = json.load(f)
-    logger.info(f" Info collected, tables to process: {len(config['tables'])}")
-    return [config['login'], config['tables']]
-
+    
+    # Load the tables from the referenced tables file
+    tables_file = os.path.join(CONFIG_DIR_FULL, config['devices'][0]['tables'])
+    with open(tables_file, 'r') as f:
+        tables_config = json.load(f)
+    
+    logger.info(f" Info collected, tables to process: {len(tables_config['tables'])} for {len(config['devices'])} devices")
+    return [config['devices'], tables_config['tables'], tables_config['remove_properties_flag']]
 
 def start_script(args) -> list:
     logger.info(f'###')
@@ -162,74 +170,81 @@ def start_script(args) -> list:
     i = 0
     for inf in infilelist:
         logger.info(f'###### {i+1}/{len(infilelist)}, process {inf}')
-        i = i+1
+        i += 1
         outf = process_infile(inf)
-        outfilelist.append(outf)
+        outfilelist.extend(outf)  # Extend to handle multiple outputs from one file
     logger.info(f'###### Complete, outfiles: {outfilelist}')
     return outfilelist
 
 def process_input(args) -> list:
     infilelist = []
-    # option1: input from cli input 
+    # Option 1: input from CLI input 
     if args.infiles:
         logger.info(f'###### Step1 - Get config files from python arguments:')
         infilelist = args.infiles.split(',')
 
-    # option2: input from promt user select
-    if args.infiles == None:
-        # step 1: get config files
+    # Option 2: input from prompt user select
+    if not args.infiles:
+        # Step 1: get config files
         logger.info(f'###### Step1 - Get config files in folder: {CONFIG_DIR_FULL}')
         files = get_config_files_to_list(CONFIG_DIR_FULL)
 
-        # step 2: user select config file
+        # Step 2: user select config file
         logger.info(f'###### Step1 - Choose input config files from list:')
         file = prompt_select_file(files)
         infilelist.append(file)
 
     return infilelist
 
-def process_infile(file: str) -> str:
-    # step 3: read config file
+def process_infile(file: str) -> list:
+    # Step 3: read config file
     logger.info(f'###### Step3 - Load json config from {file}')
-    [login_info, req_tables] = read_config_json(os.path.join(CONFIG_DIR_FULL, file))
+    [devices, req_tables, remove_properties_flag] = read_config_json(os.path.join(CONFIG_DIR_FULL, file))
 
-    # step 4: login apic
-    logger.info(f'###### Step4 - Login apic and get token:')
-    token = get_apic_token(login_info['ip'], login_info['username'], login_info['password'])
+    outfilelist = []
+    # Process each device in the config
+    for idx, device in enumerate(devices):
+        logger.info(f'###### Step4 - Processing device {idx+1}/{len(devices)}: {device["environment"]}')
 
-    # step 5: process apic api and export to excel
-    # Prepare excel writer
-    outfile = f"apic_{login_info['environment']}_{get_datetime()}.xlsx"
-    writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
-    logger.info(f'###### Step5 - Start processing, export to {outfile}')
+        # Step 4: login apic
+        logger.info(f'###### Step4 - Login apic and get token for {device["environment"]}:')
+        token = get_apic_token(device['ip'], device['username'], device['password'])
 
-    for i in range(len(req_tables)):
-        logger.info(f" ### [{i + 1}/{len(req_tables)}], process {req_tables[i]['key']}")
-        # step 5A: Get api resp
-        resp = get_apic_api_resp(login_info['ip'], req_tables[i]['key'], token)
+        # Step 5: process apic api and export to excel
+        # Prepare excel writer
+        outfile = f"apic_{device['environment']}_{get_datetime()}.xlsx"
+        writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
+        logger.info(f'###### Step5 - Start processing, export to {outfile}')
 
-        # step 5B: Export to df
-        df1 = parse_apic_json(resp.json(), req_tables[i]['key'])
+        for i in range(len(req_tables)):
+            logger.info(f" ### [{i + 1}/{len(req_tables)}], process {req_tables[i]['key']}")
+            # Step 5A: Get api resp
+            resp = get_apic_api_resp(device['ip'], req_tables[i]['key'], token)
 
-        # step 5C: remove properties column
-        if login_info['remove_properties_flag'] == 1:
-            df1 = remove_columns(df1, req_tables[i]['remove_properties'])
+            # Step 5B: Export to df
+            df1 = parse_apic_json(resp.json(), req_tables[i]['key'])
 
-        # step 5D: export to excel
-        export_df_to_xlsx(writer, df1, req_tables[i]['key'])
+            # Step 5C: remove properties column
+            if remove_properties_flag == 1:
+                df1 = remove_columns(df1, req_tables[i]['remove_properties'])
 
-    logger.info(f'###')
-    logger.info(f'###')
-    logger.info(f'### close output: {outfile}')
-    logger.info(f'###')
-    logger.info(f'###')
-    writer.close()
-    return outfile
+            # Step 5D: export to excel
+            export_df_to_xlsx(writer, df1, req_tables[i]['key'])
+
+        logger.info(f'###')
+        logger.info(f'###')
+        logger.info(f'### close output: {outfile}')
+        logger.info(f'###')
+        logger.info(f'###')
+        writer.close()
+        outfilelist.append(outfile)
+
+    return outfilelist
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--infiles", help="input json in config folder, example: -i n1_apic.json,n2_apic.json")
-    parser.add_argument("-a", "--anaylsis", action ='store_true', help="flag to analysis and parse table to new excel")
+    parser.add_argument("-i", "--infiles", help="input json in config folder, example: -i all_apic_example.json")
+    parser.add_argument("-a", "--anaylsis", action='store_true', help="flag to analysis and parse table to new excel")
     args = parser.parse_args()
 
     outfilelist = start_script(args)

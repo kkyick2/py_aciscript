@@ -1,11 +1,5 @@
 {
-  "login": {
-    "username": "admin",
-    "password": "pass",
-    "environment": "n1",
-    "ip": "172.31.1.1:443",
-    "remove_properties_flag": 1
-  },
+  "remove_properties_flag": 1,
   "tables": [
     {
       "name": "Loading APIC Topology",
