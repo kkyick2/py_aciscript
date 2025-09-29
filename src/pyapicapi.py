@@ -37,7 +37,7 @@ def setup_logging() -> None:
     logging.config.dictConfig(config)
     return
 
-def get_apic_token(ip: str, username: str, password: str) -> str:
+def get_device_token(ip: str, username: str, password: str) -> str:
     url = f'https://{ip}/api/aaaLogin.json'
     payload = {
         "aaaUser": {
@@ -58,7 +58,7 @@ def get_apic_token(ip: str, username: str, password: str) -> str:
     logger.info(f'Token: {token}')
     return token
 
-def get_apic_api_resp(ip: str, key: str, token: str) -> requests.Response:
+def get_device_api_resp(ip: str, key: str, token: str) -> requests.Response:
     url = f'https://{ip}/api/class/{key}.json'
     payload={}
     headers = {
@@ -67,11 +67,11 @@ def get_apic_api_resp(ip: str, key: str, token: str) -> requests.Response:
         "Cookie" : f'APIC-Cookie={token}'
     }
 
-    logger.info(f' Login apic api: {key} - {url}')
+    logger.info(f' Login device api: {key} - {url}')
     resp = requests.get(url, headers=headers, data=payload, verify=False)
     return resp
 
-def parse_apic_json(json_obj: list, key: str) -> pd.DataFrame:
+def parse_device_json(json_obj: list, key: str) -> pd.DataFrame:
     parsed_data = []
     for data in json_obj['imdata']:
         parsed_data.append(data[key]['attributes'])
@@ -206,11 +206,11 @@ def process_infile(file: str) -> list:
     for idx, device in enumerate(devices):
         logger.info(f'###### Step4 - Processing device {idx+1}/{len(devices)}: {device["environment"]}')
 
-        # Step 4: login apic
-        logger.info(f'###### Step4 - Login apic and get token for {device["environment"]}:')
-        token = get_apic_token(device['ip'], device['username'], device['password'])
+        # Step 4: login device
+        logger.info(f'###### Step4 - Login device and get token for {device["environment"]}:')
+        token = get_device_token(device['ip'], device['username'], device['password'])
 
-        # Step 5: process apic api and export to excel
+        # Step 5: process device api and export to excel
         # Prepare excel writer
         outfile = f"apic_{device['environment']}_{get_datetime()}.xlsx"
         writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
@@ -219,10 +219,10 @@ def process_infile(file: str) -> list:
         for i in range(len(req_tables)):
             logger.info(f" ### [{i + 1}/{len(req_tables)}], process {req_tables[i]['key']}")
             # Step 5A: Get api resp
-            resp = get_apic_api_resp(device['ip'], req_tables[i]['key'], token)
+            resp = get_device_api_resp(device['ip'], req_tables[i]['key'], token)
 
             # Step 5B: Export to df
-            df1 = parse_apic_json(resp.json(), req_tables[i]['key'])
+            df1 = parse_device_json(resp.json(), req_tables[i]['key'])
 
             # Step 5C: remove properties column
             if remove_properties_flag == 1:

@@ -208,13 +208,13 @@ def process_infile(file: str) -> None:
     # step 3B: Get interface l1PhysIf
     # l1PhysIf ========================================
     df_l1PhysIf = pd.read_excel(file, sheet_name='l1PhysIf')
-    df_l1PhysIf = df_l1PhysIf[['dn', 'id', 'descr', 'portT', 'mode', 'layer', 'usage', 'adminSt', 'autoNeg']]  # choose column
+    df_l1PhysIf = df_l1PhysIf[['dn', 'id', 'descr', 'portT', 'mode', 'layer', 'usage', 'adminSt', 'autoNeg','modTs']]  # choose column
     df_l1PhysIf = df_l1PhysIf.sort_values(by=['dn'])
 
     # step 3B: Get interface ethpmPhysIf
     # ethpmPhysIf ========================================
     df_ethpmPhysIf = pd.read_excel(file, sheet_name='ethpmPhysIf')
-    df_ethpmPhysIf = df_ethpmPhysIf[['dn','lastLinkStChg','nativeVlan', 'operSpeed', 'operDuplex','operSt', 'operStQual', 'bundleIndex', 'operVlans']]  # choose column
+    df_ethpmPhysIf = df_ethpmPhysIf[['dn','lastLinkStChg','accessVlan','nativeVlan','operSpeed','operDuplex','operSt','operStQual','bundleIndex','operVlans','allowedVlans']]  # choose column
     df_ethpmPhysIf['dn'] = df_ethpmPhysIf['dn'].str.replace(r'/phys$', '', regex=True)
     df_ethpmPhysIf = df_ethpmPhysIf.sort_values(by=['dn'])
     
@@ -232,7 +232,7 @@ def process_infile(file: str) -> None:
     df_interface['_intf_p'] = df_interface['dn'].str.replace(r'.*\[eth1\/(\d+)\].*', 'p'+ r'\1', regex=True)
     # _intf_n, _intf_p = p10 -> 10
     df_interface['_intf_n'] = df_interface['_intf_p'].str.replace(r'[pP](\d+(?:-\d+)?)', r'\1', regex=True)
-    df_interface = df_interface[['dn','_nodeid' ,'_intf','_intf_p','_intf_n', 'descr', 'portT', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'guiCiscoEID', 'bundleIndex', 'operVlans', 'nativeVlan', 'lastLinkStChg']] # choose column
+    df_interface = df_interface[['dn','_nodeid','_intf','_intf_p','_intf_n','descr','portT','layer','usage','operSpeed','operDuplex','autoNeg','adminSt','operSt','operStQual','guiCiscoEID','bundleIndex','accessVlan','nativeVlan','operVlans','allowedVlans','lastLinkStChg','modTs']] # choose column
 
     # step 3D,3E,3F: Get encp-all, epg-encp, intf-encp, 
     # fvRsPathAtt ========================================
@@ -302,7 +302,7 @@ def process_infile(file: str) -> None:
     # merge to interface (df_interface <- df_intf_profile_split)
     # ========================================
     df_interface =  pd.merge(df_interface, df_intf_profile_split, on=['_nodeid','_intf_p'] , how="left")
-    df_interface = df_interface[['dn_x','_nodeid' ,'_intf','_intf_p','_intf_n_x', 'descr', 'portT', 'layer', 'usage', 'operSpeed','operDuplex', 'autoNeg', 'adminSt','operSt', 'operStQual', 'guiCiscoEID', 'bundleIndex', 'operVlans', 'nativeVlan', '_policyGrp', 'lastLinkStChg']] # choose column
+    df_interface = df_interface[['dn_x','_nodeid','_intf','_intf_p','_intf_n_x','descr','portT','layer','usage','operSpeed','operDuplex','autoNeg','adminSt','operSt','operStQual','guiCiscoEID','bundleIndex','accessVlan','nativeVlan','operVlans','allowedVlans','_policyGrp','lastLinkStChg','modTs']] # choose column
     df_interface = df_interface.rename(columns={'dn_x': 'dn', '_intf_n_x': '_intf_n'})
 
     # step 99: export result to xlsx apic_n1_xxxx_20241016_1335.xlsx

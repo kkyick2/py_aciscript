@@ -579,7 +579,6 @@
       "key": "ethpmPhysIf",
       "alias": "InterfaceInfo",
       "remove_properties": [
-        "accessVlan",
         "backplaneMac",
         "cfgAccessVlan",
         "cfgNativeVlan",
