@@ -12,6 +12,7 @@ This project provides a Python script (`pyapicapi.py`) to interact with Cisco AP
 - **Logging**: Configurable logging for development and production environments.
 - **Command-Line Interface**: Supports input file specification and analysis flags via command-line arguments.
 - **Modular Design**: Integrates with analysis modules for extended functionality.
+- **Concurrent Processing**: Uses ThreadPoolExecutor for parallel processing of multiple devices and analysis tasks.
 
 ## Prerequisites
 
@@ -26,6 +27,7 @@ This project provides a Python script (`pyapicapi.py`) to interact with Cisco AP
   - `re`
   - `datetime`
   - `pathlib`
+  - `concurrent.futures`
 - Cisco APIC access with valid credentials.
 - Configuration files in JSON format located in the `config` directory.
 - (Optional) `pyapicanaylsis_interface` and `pyapicanaylsis_contract` modules for analysis features.

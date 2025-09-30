@@ -81,40 +81,50 @@ def start_script(args) -> list:
     infilelist = process_input(args)
     outfilelist = []
 
+    batch_datetime = getattr(args, 'batch_datetime', get_datetime())
+
     logger.info(f'###### Step2 - Process excel files: {infilelist}')
     i = 0
     for inf in infilelist:
         logger.info(f'###### {i+1}/{len(infilelist)}, process {inf}')
-        i = i+1
-        outf = process_infile(inf)
+        i += 1
+        outf = process_infile(inf, batch_datetime)
         outfilelist.append(outf)
 
     return outfilelist
 
 def process_input(args) -> list:
     infilelist = []
-    # option1: input from cli input 
     if args.infiles:
         logger.info(f'###### Step1 - Get api excel from python arguments:')
         infilelist = args.infiles.split(',')
+        for f in infilelist:
+            if not re.match(r'apic_.*_\d{8}_\d{4}\.xlsx', os.path.basename(f)):
+                logger.error(f'Invalid input filename format: {f}')
+                infilelist.remove(f)
 
-    # option2: input from promt user select
-    if args.infiles == None:
-        # step 1: get config files
+    if not args.infiles:
         logger.info(f'###### Step1 - Get api excel in: {PARENT_DIR}')
         files = get_config_files_to_list(PARENT_DIR)
-
-        # step 2: user select config file
         logger.info(f'###### Step2 - Choose input excel from list:')
         file = prompt_select_file(files)
         infilelist.append(file)
 
     return infilelist
 
-def process_infile(file: str) -> None:
+def process_infile(file: str, batch_datetime: str) -> str:
+    logger.info(f'###### Step3 - Process excel: {file}')
+    
+    # Extract environment from filename
+    match = re.match(r'apic_([^_]+)_\d{8}_\d{4}\.xlsx', os.path.basename(file))
+    if not match:
+        logger.error(f'Invalid input filename format: {file}')
+        return ''
+    outfile_env = match.group(1)
+
     # step 3: column operation
     # ===========================================================================
-    logger.info(f'###### Step3 - Process excel: {file}')
+    
     # step 3A: Get subnet
     # fvSubnet ========================================
     df_fvSubnet = pd.read_excel(file, sheet_name='fvSubnet')
@@ -192,7 +202,7 @@ def process_infile(file: str) -> None:
 
     # step 99: export result to xlsx apic_n1_tables_20241016_1335.xlsx
     outfile_env = file.split("_")[1]
-    outfile = f"apic_{outfile_env}_contract_{get_datetime()}.xlsx"
+    outfile = f"apic_{outfile_env}_contract_{batch_datetime}.xlsx"
     writer = pd.ExcelWriter(os.path.join(PARENT_DIR, outfile))
     tshoot = 0
     export_df_to_xlsx(writer, df_epgbd_ip, 'epgbd_ip')
