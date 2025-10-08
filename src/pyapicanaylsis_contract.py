@@ -99,7 +99,7 @@ def process_input(args) -> list:
         logger.info(f'###### Step1 - Get api excel from python arguments:')
         infilelist = args.infiles.split(',')
         for f in infilelist:
-            if not re.match(r'apic_.*_\d{8}_\d{4}\.xlsx', os.path.basename(f)):
+            if not re.match(r'ciscoapic_.*_\d{8}_\d{4}\.xlsx', os.path.basename(f)):
                 logger.error(f'Invalid input filename format: {f}')
                 infilelist.remove(f)
 
@@ -116,7 +116,7 @@ def process_infile(file: str, batch_datetime: str) -> str:
     logger.info(f'###### Step3 - Process excel: {file}')
     
     # Extract environment from filename
-    match = re.match(r'apic_([^_]+)_\d{8}_\d{4}\.xlsx', os.path.basename(file))
+    match = re.match(r'ciscoapic_([^_]+)_\d{8}_\d{4}\.xlsx', os.path.basename(file))
     if not match:
         logger.error(f'Invalid input filename format: {file}')
         return ''
